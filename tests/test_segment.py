@@ -38,3 +38,9 @@ def test_ipa(text, kw, seq):
 )
 def test_asjp(text, seq):
     assert asjp(text) == seq
+
+
+def test_sampa():
+    seq = 'tʰɔxtər'
+    assert ''.join(sampa2ipa('t_hOxt@r')) == seq
+    assert ' '.join(sampa('t_hOxt@r')) == 't _h O x t @ r'

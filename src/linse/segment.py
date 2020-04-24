@@ -8,7 +8,7 @@ in the `segments` package.
 """
 import re
 
-__all__ = ['ipa', 'asjp']
+__all__ = ['ipa', 'asjp', 'sampa', 'sampa2ipa']
 
 from linse.models import *
 
@@ -221,4 +221,26 @@ def asjp(word, merge_vowels=True):
 
 
 def sampa(text):
-    raise NotImplementedError
+    """
+    Convert sequence in IPA-sampa-format to IPA-unicode.
+
+    Notes
+    -----
+    This function is based on code taken from Peter Kleiweg
+    (http://www.let.rug.nl/~kleiweg/L04/devel/python/xsampa.html).
+
+    """
+    from linse.sampa import SAMPA
+
+    result = []
+    tokens = SAMPA.segent_pattern.findall(text)
+    for tok, err in tokens:
+        assert not err and tokens, '{0} + {1}'.format(err, tok)
+        result.append(tok)
+
+    return result
+
+
+def sampa2ipa(text):
+    from linse.sampa import SAMPA
+    return [SAMPA[t] for t in sampa(text)]

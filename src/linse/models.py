@@ -4,39 +4,42 @@ import unicodedata
 
 from clldutils.misc import lazyproperty
 
-__all__ = ['VOWELS', 'TONES', 'DIACRITICS', 'SEMI_DIACRITICS', 'STRESS', 'MODELS', 'Model']
+__all__ = ['VOWELS', 'TONES', 'DIACRITICS', 'SEMI_DIACRITICS', 'STRESS', 'MODELS', 'Model', 'DVTS']
 
 STRESS = "ˈˌ'"
-VOWELS = 'ṍεaeiouyáãæíõøúĩıœũūǒǝȇȗɐɑɒɔɘəɚɛɜɞɤɨɪɯɵɶɷɿʅʉʊʌʏᴀᴇᴜẽỹṳ'
-TONES = '¹²³⁴⁵⁶⁷⁸⁹⁰₁₂₃₄₅₆₇₈₉₀0123456789˥˦˧˨˩˪˫-꜈-꜉-꜊-꜋-꜌-꜍-꜎-꜏-꜐-꜑-꜒-꜓-꜔-꜕-꜖-ꜗ-ꜘ-ꜙ-ꜚ-꜀-꜁-꜂-꜃-꜄-꜅-꜆-꜇'
-DIACRITICS = frozenset({
-    ' ', '!', ':', '|', '¯', 'ʰ', 'ʱ', 'ʲ', 'ʳ', 'ʴ', 'ʵ', 'ʶ', 'ʷ', 'ʸ', 'ʹ', 'ʺ', 'ʻ', 'ʼ', 'ʽ',
-    'ʾ', 'ʿ', 'ˀ', 'ˀ', 'ˁ', '˂', '˃', '˄', '˅', 'ˆ', 'ˈ', 'ˉ', 'ˊ', 'ˋ', 'ˌ', 'ˍ', 'ˎ', 'ˏ', 'ː',
-    'ˑ', '˒', '˓', '˔', '˕', '˖', '˗', '˞', '˟', 'ˠ', 'ˡ', 'ˢ', 'ˣ', 'ˤ', 'ˬ', '˭', 'ˮ', '˯', '˰',
-    '˱', '˲', '˳', '˴', '˵', '˶', '˷', '˸', '˹', '˺', '˻', '˼', '˽', '˾', '˿', '̀', '̀', '́', '́', '́', '̂',
-    '̃', '̄', '̅', '̆', '̇', '̈', '̈', '̉', '̊', '̋', '̌', '̍', '̎', '̏', '̐', '̑', '̒', '̓', '̓', '̔', '̕', '̖', '̗',
-    '̘', '̙', '̚', '̛', '̜', '̝', '̞', '̟', '̠', '̡', '̢', '̣', '̤', '̥', '̦', '̧', '̨', '̩', '̪',
-    '̫', '̬', '̭', '̮', '̯', '̰', '̱', '̲', '̲', '̳', '̴', '̵', '̶', '̷', '̸', '̹', '̺', '̻', '̼',
-    '̽', '̾', '̿', '͂', 'ͅ', '͆', '͇', '͈', '͉', '͊', '͋', '͌', '͍', '͎', '͏', '͐', '͑', '͒', '͓', '͔', '͕', '͖', '͗', '͘', '͙', '͚',
-    '͛', '͝', '͞', '͟', '͠', '͢', 'ͣ', 'ͤ', 'ͥ', 'ͦ', 'ͧ', 'ͨ', 'ͩ', 'ͪ', 'ͫ', 'ͬ', 'ͭ', 'ͮ', 'ͯ', '҃', '҄', '҅', '҆', '҇', '҈', '҉',
-    'ՙ', 'ٖ', 'ٰ', 'ܑ', '߫', '߬', '߭', '߮', '߯', '߰', '߱', '߲', '߳', 'ᴬ', 'ᴭ', 'ᴮ', 'ᴯ', 'ᴰ', 'ᴱ', 'ᴲ', 'ᴳ', 'ᴴ',
-    'ᴵ', 'ᴶ', 'ᴷ', 'ᴸ', 'ᴹ', 'ᴺ', 'ᴻ', 'ᴼ', 'ᴽ', 'ᴾ', 'ᴿ', 'ᵀ', 'ᵁ', 'ᵂ', 'ᵃ', 'ᵄ', 'ᵅ', 'ᵆ', 'ᵇ',
-    'ᵈ', 'ᵉ', 'ᵊ', 'ᵋ', 'ᵌ', 'ᵍ', 'ᵎ', 'ᵏ', 'ᵐ', 'ᵑ', 'ᵒ', 'ᵓ', 'ᵔ', 'ᵕ', 'ᵖ', 'ᵗ', 'ᵘ', 'ᵙ', 'ᵚ',
-    'ᵛ', 'ᵜ', 'ᵝ', 'ᵞ', 'ᵟ', 'ᵠ', 'ᵡ', 'ᵢ', 'ᵣ', 'ᵤ', 'ᵥ', 'ᵦ', 'ᵧ', 'ᵨ', 'ᵩ', 'ᵪ', 'ᵸ', 'ᶛ', 'ᶜ', 'ᶝ',
-    'ᶞ', 'ᶟ', 'ᶠ', 'ᶡ', 'ᶢ', 'ᶣ', 'ᶤ', 'ᶥ', 'ᶦ', 'ᶧ', 'ᶨ', 'ᶩ', 'ᶪ', 'ᶫ', 'ᶬ', 'ᶭ', 'ᶮ', 'ᶯ', 'ᶰ',
-    'ᶱ', 'ᶲ', 'ᶳ', 'ᶴ', 'ᶵ', 'ᶶ', 'ᶷ', 'ᶸ', 'ᶹ', 'ᶺ', 'ᶻ', 'ᶼ', 'ᶽ', 'ᶾ', 'ᶿ', '᷀', '᷁', '᷂', '᷃', '᷄', '᷅',
-    '᷆', '᷇', '᷈', '᷉', '᷊', '᷋', '᷌', '᷍', '᷎', '᷏', 'ᷓ', 'ᷔ', 'ᷕ', 'ᷖ', 'ᷗ', 'ᷘ', 'ᷙ', 'ᷚ', 'ᷛ', 'ᷜ', 'ᷝ', 'ᷞ', 'ᷟ', 'ᷠ', 'ᷡ', 'ᷢ', 'ᷣ',
-    'ᷤ', 'ᷥ', 'ᷦ', '᷼', '᷽', '᷾', '᷿', 'ⁱ', '⁺', '⁻', '⁼', '⁽', '⁾', 'ⁿ', '₊', '₋', '₌', '₍', '₎', 'ₐ', 'ₑ',
-    'ₒ', 'ₓ', 'ₔ', 'ₕ', 'ₖ', 'ₗ', 'ₘ', 'ₙ', 'ₚ', 'ₛ', 'ₜ', '⃐', '⃑', '⃒', '⃓', '⃔', '⃕', '⃖', '⃗', '⃘', '⃙', '⃚',
-    '⃛', '⃜', '⃥', '⃦', '⃧', '⃨', '⃩', '⃪', '⃫', '⃬', '⃭', '⃮', '⃯', '⃰', '→', '⇒', '⨧', 'ⱼ', 'ⱽ', 'ⵯ', 'ⷠ', 'ⷡ', 'ⷢ',
-    'ⷣ', 'ⷤ', 'ⷥ', 'ⷦ', 'ⷧ', 'ⷨ', 'ⷩ', 'ⷪ', 'ⷫ', 'ⷬ', 'ⷭ', 'ⷮ', 'ⷯ', 'ⷰ', 'ⷱ', 'ⷲ', 'ⷳ', 'ⷴ', 'ⷵ', 'ⷶ', 'ⷷ', 'ⷸ', 'ⷹ', 'ⷺ', 'ⷻ', 'ⷼ', 'ⷽ',
-    'ⷾ', 'ⷿ', '゙', '゚', '꙯', '꙼', '꙽', 'ꚜ', 'ꚝ', 'ꜛ', 'ꜜ', 'ꜝ', 'ꜞ', 'ꜟ', 'ꞈ', '꞉', '꞊', '꣠', '꣡', '꣢', '꣣', '꣤',
-    '꣥', '꣦', '꣧', '꣨', '꣩', '꣪', '꣫', '꣬', '꣭', '꣮', '꣯', '꣰', '꣱', 'ꩰ', 'ꭜ', 'ꭞ', '\uf1af', '︠', '︡', '︢', '︣', '︤',
-    '︥', '︦'})
 SEMI_DIACRITICS = 'hsʃ̢ɕʂʐʑʒw'
 
 
-class Model(object):
+class DataDir:
+    def __init__(self, d):
+        self.dir = pathlib.Path(d)
+        assert self.dir.exists() and self.dir.is_dir()
+        self.name = self.dir.name
+
+
+class DVT(DataDir):
+    """
+    Diacritics, Vowels and Tones
+    """
+    def _iter_chars(self, fname, strip_dash=False):
+        for line in self.dir.joinpath(fname).open(encoding='utf-8-sig'):
+            line = unicodedata.normalize('NFC', line.strip())
+            yield line.replace('-', '') if strip_dash else line
+
+    @lazyproperty
+    def diacritics(self):
+        return set(self._iter_chars('diacritics', strip_dash=True))
+
+    @lazyproperty
+    def vowels(self):
+        return set(self._iter_chars('vowels')) - self.diacritics
+
+    @lazyproperty
+    def tones(self):
+        return set(self._iter_chars('tones'))
+
+
+class Model(DataDir):
     """
     Class for the handling of sound-class models.
 
@@ -122,11 +125,6 @@ class Model(object):
     Compiler: Johann-Mattis List
     Date:     2012-03
     """
-    def __init__(self, d):
-        self.dir = pathlib.Path(d)
-        assert self.dir.exists() and self.dir.is_dir()
-        self.name = self.dir.name
-
     @lazyproperty
     def info(self):
         res = {}
@@ -195,3 +193,11 @@ MODELS = {
     d.name: Model(d)
     for d in pathlib.Path(__file__).parent.joinpath('models').iterdir()
     if d.joinpath('converter').exists()}
+
+DVTS = {
+    d.name: DVT(d)
+    for d in pathlib.Path(__file__).parent.joinpath('models').iterdir()
+    if d.joinpath('tones').exists()}
+VOWELS = DVTS['dvt'].vowels
+TONES = DVTS['dvt'].tones
+DIACRITICS = DVTS['dvt'].diacritics
