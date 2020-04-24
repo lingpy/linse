@@ -4,7 +4,7 @@ Annotating a sequence means creating a list of annotations for a sequence.
 from linse.models import *
 from linse.typedsequence import ints, floats
 
-__all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weights']
+__all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight', 'codepoints']
 
 REPLACEMENT = '\ufffd'
 
@@ -252,7 +252,7 @@ def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS, cldf=Fa
     See also
     --------
 
-    prosodic weights
+    prosodic weight
 
     Notes
     -----
@@ -351,7 +351,7 @@ def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS, cldf=Fa
     return [conv.get(x, x) for x in psequence]
 
 
-def prosodic_weights(sequence, _transform=None, stress=STRESS, diacritics=DIACRITICS):
+def prosodic_weight(sequence, _transform=None, stress=STRESS, diacritics=DIACRITICS):
     """
     Calculate prosodic weights for each position of a sequence.
 
@@ -381,7 +381,7 @@ def prosodic_weights(sequence, _transform=None, stress=STRESS, diacritics=DIACRI
     --------
     >>> from lingpy import *
     >>> prostring = '#vC>'
-    >>> prosodic_weights(prostring)
+    >>> prosodic_weight(prostring)
     [2.0, 1.3, 1.5, 0.7]
 
     See also
@@ -448,7 +448,10 @@ def prosodic_weights(sequence, _transform=None, stress=STRESS, diacritics=DIACRI
 
 
 def codepoints(sequence):
-    return [None for s in sequence]
+    def codepoint(c):
+        return 'U+' + hex(ord(c))[2:].upper().zfill(4)
+
+    return [' '.join(codepoint(c) for c in s) for s in sequence]
 
 
 def sea_structure(sequence):
