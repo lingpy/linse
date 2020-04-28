@@ -1,7 +1,7 @@
 """
 Annotating a sequence means creating a list of annotations for a sequence.
 """
-from linse.models import *
+from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
 
 __all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight', 'codepoints']
@@ -288,9 +288,9 @@ def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS, cldf=Fa
 
     # get the sonority profile
     sonority = [9] + \
-              ints(soundclass(
-                  sequence, model='art', stress=stress, diacritics=diacritics, cldf=cldf)) + \
-              [9]
+        ints(soundclass(
+            sequence, model='art', stress=stress, diacritics=diacritics, cldf=cldf)) + \
+        [9]
     assert 9 not in sonority[1:-1]
 
     # create the output values

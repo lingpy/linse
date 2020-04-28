@@ -9,8 +9,7 @@ from linse.annotate import soundclass
 __all__ = ['syllables', 'morphemes', 'flatten']
 
 
-def _iter_syllables(sequence, prosodies, vowels=(7,), tones=(8,),
-        max_vowels=2):
+def _iter_syllables(sequence, prosodies, vowels=(7,), tones=(8,), max_vowels=2):
     """
     Find syllable breakpoints for a set of tokens, based on their prosody.
 
@@ -23,11 +22,11 @@ def _iter_syllables(sequence, prosodies, vowels=(7,), tones=(8,),
     If more complex prosodic models are used, one needs to indicate what is a
     vowel, and also what class is reserved for a tone.
     """
-    tuples = [('#', 0)]+list(zip(sequence, prosodies))+[('$', 0)]
+    tuples = [('#', 0)] + list(zip(sequence, prosodies)) + [('$', 0)]
     syllable, vowel_count = [], 0
     for i, (char, pro) in enumerate(tuples[1:-1], start=1):
-        pchar, ppro = tuples[i-1]
-        fchar, fpro = tuples[i+1]
+        pchar, ppro = tuples[i - 1]
+        fchar, fpro = tuples[i + 1]
         if pro in vowels:
             vowel_count += 1
         if fpro not in tones:
@@ -80,8 +79,8 @@ def syllables(sequence,
 
     # get the sonority profile for the sequence
     profile = ints(soundclass(seq, model=model, cldf=cldf, stress=stress, diacritics=diacritics))
-    syls = [list(syllable) for syllable in _iter_syllables(seq, profile, max_vowels=max_vowels,
-        vowels=vowels, tones=tones)]
+    syls = [list(syllable) for syllable in _iter_syllables(
+        seq, profile, max_vowels=max_vowels, vowels=vowels, tones=tones)]
 
     # re-insert gaps into sonority profile:
     if gaps:
@@ -116,7 +115,7 @@ def morphemes(sequence,
     """
     if split_on_tones:
         return syllables(sequence, cldf=cldf)
-    
+
     def split_on_sep(seq):
         morpheme = []
         for token in seq:

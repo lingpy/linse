@@ -49,7 +49,7 @@ class TypedSequence(list):
         list.__setitem__(self, index, self.__class__.read(item, self._type, self._strict))
 
 
-class words(TypedSequence):
+class words(TypedSequence):  # noqa: N801
     def __init__(self, iterable, strict=False):
         TypedSequence.__init__(self, str, iterable, strict=strict)
 

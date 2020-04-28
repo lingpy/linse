@@ -10,7 +10,7 @@ import re
 
 __all__ = ['ipa', 'asjp', 'sampa', 'sampa2ipa']
 
-from linse.models import *
+from linse.models import *  # noqa: F401, F403
 
 
 def valid_word(string):
@@ -28,8 +28,8 @@ def ipa(istring,
         combiners="\u0361\u035c",
         breaks="-.",
         nasals='ãũẽĩõ',
-        nasal_char = "\u0303",
-        nogos = "_◦+",
+        nasal_char="\u0303",
+        nogos="_◦+",
         merge_vowels=True,
         merge_geminates=False,
         expand_nasals=False,
@@ -191,8 +191,8 @@ def ipa(istring,
     if merge_geminates:
         new_out = [out[0]]
         for i in range(len(out) - 1):
-            outA = out[i]
-            outB = out[i + 1]
+            outA = out[i]  # noqa: N806
+            outB = out[i + 1]  # noqa: N806
             if outA == outB:
                 new_out[-1] += outB
             else:
