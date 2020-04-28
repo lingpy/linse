@@ -36,11 +36,12 @@ def get_profile(
     """
     Retrieve a list of graphemes from a list of forms.
     """
+    preceding, following = preceding or '', following or ''
     graphemes = defaultdict(list)
     for i, form in enumerate(forms):
         kw = form.kw if hasattr(form, 'kw') else {'ID': i+1}
         try:
-            segs = [preceding] + ipa(str(form),
+            segs = ipa(str(form),
                     diacritics=diacritics,
                     vowels=vowels,
                     tones=tones,
@@ -54,13 +55,15 @@ def get_profile(
                     expand_nasals=expand_nasals,
                     semi_diacritics=semi_diacritics,
                     stress=stress,
-                    nasal_placeholder=nasal_placeholder) + [following]
+                    nasal_placeholder=nasal_placeholder)
+            segs[0] = preceding+segs[0]
+            segs[-1] += following
+            for segment in segs:
+                if segment:
+                    graphemes[segment, 1].append(kw)
+
         except ValueError:
-            segs = []
             graphemes[str(form), 0].append(kw)
-        for segment in segs:
-            if segment:
-                graphemes[segment, 1].append(kw)
 
     return graphemes
 

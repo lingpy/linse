@@ -20,6 +20,8 @@ def valid_word(string):
         raise ValueError('Invalid multi-word string: {0}'.format(string))
     if string.strip() != string:
         raise ValueError('Invalid trailing whitespace: "{0}"'.format(string))
+    if not string:
+        raise ValueError('Invalid empty string: "{0}"'.format(string))
     return string
 
 
