@@ -44,3 +44,8 @@ def test_sampa():
     seq = 'tʰɔxtər'
     assert ''.join(sampa2ipa('t_hOxt@r')) == seq
     assert ' '.join(sampa('t_hOxt@r')) == 't _h O x t @ r'
+
+
+def test_valid_word():
+    with pytest.raises(ValueError):
+        ipa(' test ')
