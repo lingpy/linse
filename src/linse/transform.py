@@ -6,48 +6,38 @@ from linse.models import STRESS, DIACRITICS
 from linse.typedsequence import ints
 from linse.annotate import soundclass
 
-__all__ = ['syllables', 'morphemes']
+__all__ = ['syllables', 'morphemes', 'flatten']
 
 
-def _iter_syllables(sequence, profile, gap_symbol):
-    syllable, vowelcount = [], 0
+def _iter_syllables(sequence, prosodies, vowels=(7,), tones=(8,),
+        max_vowels=2):
+    """
+    Find syllable breakpoints for a set of tokens, based on their prosody.
 
-    # Augment the sonority profile to make sure there's always left and right context:
-    tuples = [('#', 0)] + list(zip(sequence, profile)) + [('$', 0)]
-    for i, (char, p2) in enumerate(tuples[1:-1], start=1):
-        p1, j, p3, k = -1, i, -1, i
-        while p1 == -1:  # get left context in the sonority profile, skipping gaps
-            j -= 1
-            p1 = tuples[j][1]
+    :param vowels: all numbers that represent a vowel class
+    :param tones: all tones reresenting a tone class
+    :param max_vowels: start new syllable if maximum of vowels is reached
 
-        while p3 == -1:  # get right context in the sonority profile, skipping gaps
-            k += 1
-            p3 = tuples[k][1]
-
-        if char == gap_symbol:
-            syllable.append(char)
-            continue
-
-        # simple rule: we start a new syllable at a local minimum of prosody.
-        if p1 >= p2 < p3:
-            if p3 == 8 or p3 == 9:  # unless there's a tone following
-                pass
-            # don't break if we are in the initial and no vowel followed
-            # can be expanded to general "vowel needs to follow"-rule
-            elif p1 != 7 and p2 != 7 and i == 2:
-                pass
-            else:
-                if syllable:
-                    yield syllable
-                syllable = []
-        # break always if there's a tone
-        if p1 == 8:
-            if syllable:
+    :note: Vowels need to be presence in a syllable, which is why they are
+    assigned a specific value (default 7, as in the "art" sound class model).
+    If more complex prosodic models are used, one needs to indicate what is a
+    vowel, and also what class is reserved for a tone.
+    """
+    tuples = [('#', 0)]+list(zip(sequence, prosodies))+[('$', 0)]
+    syllable, vowel_count = [], 0
+    for i, (char, pro) in enumerate(tuples[1:-1], start=1):
+        pchar, ppro = tuples[i-1]
+        fchar, fpro = tuples[i+1]
+        if pro in vowels:
+            vowel_count += 1
+        if fpro not in tones:
+            if (ppro >= pro < fpro and vowel_count) or ppro in tones:
                 yield syllable
-            syllable = []
-
+                syllable, vowel_count = [], 0
+            elif vowel_count > max_vowels and pro in vowels:
+                yield syllable
+                syllable, vowel_count = [], 0
         syllable.append(char)
-
     if syllable:
         yield syllable
 
@@ -57,7 +47,10 @@ def syllables(sequence,
               gap_symbol="-",
               stress=STRESS,
               diacritics=DIACRITICS,
-              cldf=False):
+              cldf=True,
+              vowels=(7,),
+              tones=(8,),
+              max_vowels=2):
     """
     Carry out a simple syllabification of a sequence, using sonority as a proxy.
 
@@ -87,22 +80,25 @@ def syllables(sequence,
 
     # get the sonority profile for the sequence
     profile = ints(soundclass(seq, model=model, cldf=cldf, stress=stress, diacritics=diacritics))
+    syls = [list(syllable) for syllable in _iter_syllables(seq, profile, max_vowels=max_vowels,
+        vowels=vowels, tones=tones)]
 
     # re-insert gaps into sonority profile:
-    for i in gaps:
-        profile.insert(i, -1)
-
-    return list(_iter_syllables(sequence, profile, gap_symbol))
+    if gaps:
+        count = 0
+        for syllable in syls:
+            for i in range(len(syllable)):
+                if count in gaps:
+                    syllable.insert(i, gap_symbol)
+                    count += 1
+                count += 1
+    return syls
 
 
 def morphemes(sequence,
-              split_on_tones=True,
-              tone='T',
-              morpheme_separator='+',
-              morpheme_separators="◦+→←",
-              word_separator='_',
-              word_separators='_#',
-              cldf=False):
+              separators=("+", "_", '#'),
+              split_on_tones=False,
+              cldf=True):
     """
     Split a string into morphemes if it contains separators.
 
@@ -118,31 +114,14 @@ def morphemes(sequence,
     morphemes : list
         A nested list of the original segments split into morphemes.
     """
-    if not split_on_tones:
-        tone = ''
-
-    def split_morphemes_on_tone(seq, cv, tone):
-        morpheme = []
-        for i, token in enumerate(seq):
-            morpheme.append(token)
-            if cv[i] == tone:
-                if morpheme:
-                    yield morpheme
-                morpheme = []
-        if morpheme:
-            yield morpheme
-
-    if (morpheme_separator not in sequence) and (word_separator not in sequence):
-        # check for other hints than the clean separators in the data
-        cv_seq = soundclass(sequence, 'cv', cldf=cldf)
-        if tone in cv_seq and '+' not in cv_seq and '_' not in cv_seq:
-            return list(split_morphemes_on_tone(sequence, cv_seq, tone))
-
+    if split_on_tones:
+        return syllables(sequence, cldf=cldf)
+    
     def split_on_sep(seq):
         morpheme = []
         for token in seq:
             if token not in \
-                    morpheme_separator + morpheme_separators + word_separator + word_separators:
+                    separators:
                 morpheme.append(token)
             else:
                 if morpheme:
@@ -152,3 +131,17 @@ def morphemes(sequence,
             yield morpheme
 
     return list(split_on_sep(sequence))
+
+
+def flatten(list_of_morphemes, separator='+'):
+    """
+    Return a linear representation of a nested sequence of morphemes.
+    """
+    true_morphemes = [m for m in list_of_morphemes if m]
+    out = []
+    for morpheme in true_morphemes[:-1]:
+        if morpheme:
+            out.extend(morpheme)
+            out.append(separator)
+    out.extend(true_morphemes[-1])
+    return out
