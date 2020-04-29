@@ -12,7 +12,7 @@ class Form(object):
         self.kw = kw
 
     def __str__(self):
-        return self.text
+        return str(self.text)
 
 
 def get_profile(
@@ -47,7 +47,7 @@ def get_profile(
                 if segment:
                     graphemes[segment, 0].append(meta)
 
-        except ValueError as e:
+        except Exception as e:
             graphemes[str(form), str(e)].append(meta)
 
     return graphemes

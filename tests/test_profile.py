@@ -12,6 +12,12 @@ from linse.profile import Form, get_profile
           {'kh': 1, 'a': 1, 'n': 1, 't': 1, 'i': 1},
         ),
         (
+          ['khanti'], 
+          {'preceding': '^', 'following': '$'}, 
+          {'^kh': 1, 'a': 1, 'n': 1, 't': 1, 'i$': 1},
+        ),
+
+        (
           ['khantiitta'], 
           {'merge_geminates': True}, 
           {'kh': 1, 'ii': 1, 'tt': 1, 'a': 2, 'n': 1, 't': 1},
@@ -21,6 +27,11 @@ from linse.profile import Form, get_profile
           {},
           {'kha pt a': 1}
           ),
+        (
+            ['maggi', None],
+            {},
+            {'m': 1, 'a': 1, 'gg': 1, 'i': 1, 'None': 1}            
+            ),
         (
           ['khantiitta'], 
           {'merge_geminates': False, 'merge_vowels': False, 'semi_diacritics': ''}, 
