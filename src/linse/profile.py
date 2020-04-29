@@ -19,51 +19,36 @@ def get_profile(
         *forms, 
         preceding=None,
         following=None,
-        diacritics=DIACRITICS,
-        vowels=VOWELS,
-        tones=TONES,
-        combiners="\u0361\u035c",
-        breaks="-.",
-        nasals='ãũẽĩõ',
-        nasal_char="\u0303",
-        nogos="_◦+",
-        merge_vowels=True,
-        merge_geminates=False,
-        expand_nasals=False,
-        semi_diacritics='shʃʂɕɦʐʑʒw',
-        stress="ˈˌ'",
-        nasal_placeholder="∼"):
+        segmenter=None,
+        **kw
+        ):
     """
     Retrieve a list of graphemes from a list of forms.
     """
+    if not segmenter:
+        keywords = dict(
+                semi_diacritics='shʃʂɕɦʐʑʒw',
+                merge_vowels=True,
+                merge_geminates=True)
+        keywords.update(kw)
+        segmentize = lambda x: ipa(x['text'], **keywords)
+    else:
+        segmentize = lambda x: segmenter(x['text'], **kw)
+            
     preceding, following = preceding or '', following or ''
     graphemes = defaultdict(list)
     for i, form in enumerate(forms):
-        kw = form.kw if hasattr(form, 'kw') else {'ID': i+1}
+        meta = form.kw if hasattr(form, 'kw') else {'ID': i+1, 'text': form}
         try:
-            segs = ipa(str(form),
-                    diacritics=diacritics,
-                    vowels=vowels,
-                    tones=tones,
-                    combiners=combiners,
-                    breaks=breaks,
-                    nasals=nasals,
-                    nasal_char=nasal_char,
-                    nogos=nogos,
-                    merge_vowels=merge_vowels,
-                    merge_geminates=merge_geminates,
-                    expand_nasals=expand_nasals,
-                    semi_diacritics=semi_diacritics,
-                    stress=stress,
-                    nasal_placeholder=nasal_placeholder)
+            segs = segmentize(meta)
             segs[0] = preceding+segs[0]
             segs[-1] += following
             for segment in segs:
                 if segment:
-                    graphemes[segment, 1].append(kw)
+                    graphemes[segment, 0].append(meta)
 
-        except ValueError:
-            graphemes[str(form), 0].append(kw)
+        except ValueError as e:
+            graphemes[str(form), str(e)].append(meta)
 
     return graphemes
 
