@@ -8,7 +8,6 @@ from linse.segment import *
 def pytest_generate_tests(metafunc):
     if metafunc.function.__name__ == 'test_ipa':
         vals = [
-            ('', {}, []),
             ('t͡sɔyɡə', {}, ['t͡s', 'ɔy', 'ɡ', 'ə']),
             ('t͡sɔyɡə', {'merge_vowels': False}, ['t͡s', 'ɔ', 'y', 'ɡ', 'ə']),
             ('ˈtʲʰoɔːix_tərp͡f¹¹', {}, ['ˈtʲʰ', 'oɔːi', 'x', '_', 't', 'ə', 'r', 'p͡f', '¹¹']),
@@ -44,3 +43,10 @@ def test_sampa():
     seq = 'tʰɔxtər'
     assert ''.join(sampa2ipa('t_hOxt@r')) == seq
     assert ' '.join(sampa('t_hOxt@r')) == 't _h O x t @ r'
+
+
+def test_valid_word():
+    with pytest.raises(ValueError):
+        ipa(' test ')
+    with pytest.raises(ValueError):
+        ipa('')
