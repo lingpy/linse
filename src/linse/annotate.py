@@ -3,10 +3,14 @@ Annotating a sequence means creating a list of annotations for a sequence.
 """
 from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
+from linse.util import get_CLTS, get_NORMALIZE
 
-__all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight', 'codepoints']
+__all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
+        'codepoints', 'normalize', 'clts', 'bipa', 'CLTS', 'NORM']
 
 REPLACEMENT = '\ufffd'
+CLTS = get_CLTS()
+NORM = get_NORMALIZE()
 
 
 def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS, cldf=True):
@@ -61,34 +65,31 @@ def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS, cldf=T
         try:
             return model[token[0]]
         except IndexError:
-            return '0'
+            return REPLACEMENT
         except KeyError:
             # check for stressed syllables
-            if len(token) > 0:
-                if token[0] in stress and len(token) > 1:
+            if token[0] in stress and len(token) > 1:
+                try:
+                    return model[token[1:]]
+                except KeyError:
+                    try:
+                        return model[token[1]]
+                    except KeyError:
+                        # new character for missing data and spurious items
+                        return REPLACEMENT
+            elif token[0] in diacritics:
+                if len(token) > 1:
                     try:
                         return model[token[1:]]
                     except KeyError:
                         try:
                             return model[token[1]]
                         except KeyError:
-                            # new character for missing data and spurious items
                             return REPLACEMENT
-                elif token[0] in diacritics:
-                    if len(token) > 1:
-                        try:
-                            return model[token[1:]]
-                        except KeyError:
-                            try:
-                                return model[token[1]]
-                            except KeyError:
-                                return REPLACEMENT
-                    else:
-                        return REPLACEMENT
                 else:
-                    # new character for missing data and spurious items
                     return REPLACEMENT
             else:
+                # new character for missing data and spurious items
                 return REPLACEMENT
 
 
@@ -151,13 +152,6 @@ def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS, cldf
     >>> classes = tokens2class(tokens,'sca')
     >>> print(classes)
     CUKE
-
-    See also
-    --------
-    ipa2tokens
-    class2tokens
-    token2class
-
     """
     # raise value error if input is not an iterable (tuple or list)
     if not isinstance(tokens, (tuple, list)):
@@ -212,7 +206,8 @@ PROSODY_FORMATS = {
 }
 
 
-def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS, cldf=False):
+def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS,
+        cldf=True):
     """
     Create a prosodic string of the sonority profile of a sequence.
 
@@ -351,7 +346,8 @@ def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS, cldf=Fa
     return [conv.get(x, x) for x in psequence]
 
 
-def prosodic_weight(sequence, _transform=None, stress=STRESS, diacritics=DIACRITICS):
+def prosodic_weight(sequence, _transform=None, stress=STRESS,
+        diacritics=DIACRITICS, cldf=True):
     """
     Calculate prosodic weights for each position of a sequence.
 
@@ -389,7 +385,8 @@ def prosodic_weight(sequence, _transform=None, stress=STRESS, diacritics=DIACRIT
     prosodic_string
 
     """
-    psequence = prosody(sequence, stress=stress, diacritics=diacritics)
+    psequence = prosody(sequence, stress=stress, diacritics=diacritics,
+            cldf=cldf)
 
     # check for transformer
     if _transform:
@@ -447,12 +444,59 @@ def prosodic_weight(sequence, _transform=None, stress=STRESS, diacritics=DIACRIT
     return floats([transform[i] for i in psequence])
 
 
-def codepoints(sequence):
-    def codepoint(c):
-        return 'U+' + hex(ord(c))[2:].upper().zfill(4)
+def _codepoint(c):
+    return 'U+' + hex(ord(c))[2:].upper().zfill(4)
 
-    return [' '.join(codepoint(c) for c in s) for s in sequence]
+
+def codepoints(sequence):
+    return [' '.join(_codepoint(c) for c in s) for s in sequence]
 
 
 def sea_structure(sequence):
     return [None for s in sequence]
+
+
+def _norm(segment):
+    return ''.join([NORM.get(s, s) for s in segment])
+
+
+def normalize(sequence):
+    """
+    Normalize obvious and frequent miscodings of IPA.
+    """
+    return [_norm(s) for s in sequence]
+
+
+def _token2clts(segment):
+    return CLTS.get(
+            _norm(segment),
+            CLTS.get(
+                _norm(segment[0]) if segment else '?',
+                ['?', '?']
+                )
+            )
+
+
+def bipa(sequence):
+    """
+    Convert a sequence in supposed IPA to the B(road)IPA of CLTS.
+
+    Notes
+    -----
+    The mapping is not guaranteed to work as well as the more elaborate mapping
+    with `pyclts`. 
+    """
+    return [_token2clts(segment)[0] for segment in sequence]
+
+
+def clts(sequence):
+    """
+    Convert a sequence in supposed IPA to the CLTS feature names.
+
+    Notes
+    -----
+    The mapping is not guaranteed to work as well as the more elaborate mapping
+    with `pyclts`. 
+    """
+    return [_token2clts(segment)[1] for segment in sequence]
+

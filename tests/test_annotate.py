@@ -1,6 +1,7 @@
 import pytest
 
 from linse.annotate import *
+import linse.annotate
 
 
 @pytest.mark.parametrize(
@@ -39,3 +40,40 @@ def test_prosodic_weights():
 
 def test_codepoints():
     assert codepoints(['ˈtʲʰ']) == ['U+02C8 U+0074 U+02B2 U+02B0']
+
+
+def test_normalize():
+    assert normalize(['a:', 't', 'e', 'm'])[0] == 'aː'
+
+
+def test_bipa():
+    assert bipa(['th', 'o', 'x', 't', 'e:', 'r']) == [
+            'tʰ', 'o', 'x', 't', 'eː', 'r']
+
+
+def test_clts():
+    assert clts(['m', 'u', 't', 'i']) == ['voiced bilabial nasal consonant',
+            'rounded close back vowel', 'voiceless alveolar stop consonant',
+            'unrounded close front vowel']
+
+
+def test__token2soundclass():
+    assert linse.annotate._token2soundclass('', 'sca') == REPLACEMENT
+    assert linse.annotate._token2soundclass('A', 'sca') == REPLACEMENT
+    assert linse.annotate._token2soundclass('ʰaa', 'sca') == 'A'
+    assert linse.annotate._token2soundclass('ʰ', 'sca') == REPLACEMENT
+    assert linse.annotate._token2soundclass('ʰA', 'sca') == REPLACEMENT
+    assert linse.annotate._token2soundclass('ˈA', 'sca') == REPLACEMENT
+    assert linse.annotate._token2soundclass('ˈaː', 'sca') == 'A'
+    assert linse.annotate._token2soundclass('ʰA/a', 'sca') == 'A'
+    assert linse.annotate._token2soundclass('a/', 'sca') == REPLACEMENT
+
+
+
+
+def test_soundclass():
+    with pytest.raises(ValueError):
+        soundclass('bla', 'sca')
+    with pytest.raises(ValueError):
+        soundclass(['A', 'O'], 'sca')
+

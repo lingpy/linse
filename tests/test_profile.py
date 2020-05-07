@@ -1,6 +1,8 @@
 import pytest
 
 from linse.profile import Form, DraftProfile 
+from clldutils.path import TemporaryDirectory
+from pathlib import Path
 
 @pytest.mark.parametrize(
     'seqs,kw,res,errs',
@@ -94,5 +96,18 @@ def test_get_profile(seqs, kw, res, errs):
         assert len(v) == errs[k, error]
         
     
-    
+def test_DraftProfile():
+    path = Path(__file__).parent.joinpath('data', 'forms.csv').as_posix()
+    profile1 = DraftProfile.from_cldf(path, following='^', preceding='$')
+    profile2 = DraftProfile.from_cldf(path, language='Luobenzhuo')
+
+    assert len(profile2.graphemes) == 36
+    with TemporaryDirectory('./') as tmp:
+        profile1.write_profile(Path(tmp).joinpath('orthography.tsv'), 
+                'Grapheme', 'BIPA', 'Frequency')
+    table = profile2.get_profile(
+            'Grapheme', 'CLTS', 'SCA', 'BIPA', 'Unicode', 'Examples',
+            'Frequency', 'Languages')
+    with pytest.raises(ValueError):
+        DraftProfile('muti').get_profile('This')
 
