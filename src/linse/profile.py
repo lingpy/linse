@@ -71,7 +71,7 @@ class DraftProfile(object):
         # increase counter by i
         self.counter += i
 
-    def get_profile(self, *columns, transform=None):
+    def get_profile(self, *columns, transform=None, key=None):
         """
         Return a profile in form of a two-dimensional list.
 
@@ -88,6 +88,8 @@ class DraftProfile(object):
         - Languages
         """
         columns = columns or ['Grapheme']
+        if not key:
+            key = lambda x: x
         # not all columns are allowed
         transform = transform or {}
         modify = {
@@ -113,14 +115,14 @@ class DraftProfile(object):
             for col in columns:
                 row += [modify[col](char, meta)]
             table += [row]
-        return table
+        return sorted(table, key=key)
 
-    def write_profile(self, filename, *columns, transform=None):
+    def write_profile(self, filename, *columns, transform=None, key=None):
         """
         Write profile to file.
         """
         columns = columns or ['Grapheme']
-        table = self.get_profile(*columns, transform=transform)
+        table = self.get_profile(*columns, transform=transform, key=key)
         with open(filename, 'w') as f:
             for row in table:
                 f.write('\t'.join([str(x) for x in row])+'\n')
