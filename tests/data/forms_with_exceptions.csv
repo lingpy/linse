@@ -1,0 +1,151 @@
+ID,Local_ID,Language_ID,Parameter_ID,Value,Form,Segments,Comment,Source,Cognacy,Loan,Graphemes,Profile
+Jianchuan-1_sky-1,,Jianchuan,1_sky,fehler,f e h l e r,x ẽ ⁵⁵,,Allen2007,,,^x ẽ ⁵⁵$,default
+Eryuan-1_sky-1,,Eryuan,1_sky,xe⁵⁵,xe⁵⁵,x e ⁵⁵,,Allen2007,,,^x e ⁵⁵$,default
+Heqing-1_sky-1,,Heqing,1_sky,xʰẽ⁵⁵,xʰẽ⁵⁵,xʰ ẽ ⁵⁵,,Allen2007,,,^xʰ ẽ ⁵⁵$,default
+Lanping-1_sky-1,,Lanping,1_sky,xẽ⁵⁵kʰao³¹,xẽ⁵⁵kʰao³¹,x ẽ ⁵⁵ + kʰ ao ³¹,,Allen2007,,,^x ẽ ⁵⁵ kʰ ao ³¹$,default
+Qiliqiao-1_sky-1,,Qiliqiao,1_sky,xe⁵⁵,xe⁵⁵,x e ⁵⁵,,Allen2007,,,^x e ⁵⁵$,default
+Yunlong-1_sky-1,,Yunlong,1_sky,xe⁵⁵,xe⁵⁵,x e ⁵⁵,,Allen2007,,,^x e ⁵⁵$,default
+Xiangyun-1_sky-1,,Xiangyun,1_sky,xẽ⁵⁵,xẽ⁵⁵,x ẽ ⁵⁵,,Allen2007,,,^x ẽ ⁵⁵$,default
+Luobenzhuo-1_sky-1,,Luobenzhuo,1_sky,xẽ⁵⁵,xẽ⁵⁵,x ẽ ⁵⁵,,Allen2007,,,^x ẽ ⁵⁵$,default
+Zhoucheng-1_sky-1,,Zhoucheng,1_sky,xe⁵⁵,xe⁵⁵,x e ⁵⁵,,Allen2007,,,^x e ⁵⁵$,default
+Jianchuan-10_hail-1,,Jianchuan,10_hail,sue⁴⁴wa⁴²tsɿ³³,sue⁴⁴wa⁴²tsɿ³³,s u/w e ⁴⁴ + w a ⁴² + ts ɿ ³³,,Allen2007,,,^s ue ⁴⁴ wa ⁴² ts ɿ ³³$,default
+Eryuan-10_hail-1,,Eryuan,10_hail,tʂɔ⁴²pɔ⁴²tsɿ³³,tʂɔ⁴²pɔ⁴²tsɿ³³,ʈʂ ɔ ⁴² + p ɔ ⁴² + ts ɿ ³³,,Allen2007,,,^tʂ ɔ ⁴² p ɔ ⁴² ts ɿ ³³$,default
+Heqing-10_hail-1,,Heqing,10_hail,sʰue⁴⁴ wa⁴² tsɿ³³,sʰue⁴⁴wa⁴²tsɿ³³,sʰ u/w e ⁴⁴ + w a ⁴² + ts ɿ ³³,,Allen2007,,,^sʰ ue ⁴⁴ wa ⁴² ts ɿ ³³$,default
+Lanping-10_hail-1,,Lanping,10_hail,po³³tɛ⁴⁴,po³³tɛ⁴⁴,p o ³³ + t ɛ ⁴⁴,,Allen2007,,,^p o ³³ t ɛ ⁴⁴$,default
+Qiliqiao-10_hail-1,,Qiliqiao,10_hail,ɕy⁴⁴kʰuɔ³³tsɿ³³,ɕy⁴⁴kʰuɔ³³tsɿ³³,ɕ y ⁴⁴ + kʰ u/w ɔ ³³ + ts ɿ ³³,,Allen2007,,,^ɕ y ⁴⁴ kʰ uɔ ³³ ts ɿ ³³$,default
+Yunlong-10_hail-1,,Yunlong,10_hail,tso⁴²po⁴²tsɿ³³,tso⁴²po⁴²tsɿ³³,ts o ⁴² + p o ⁴² + ts ɿ ³³,,Allen2007,,,^ts o ⁴² p o ⁴² ts ɿ ³³$,default
+Xiangyun-10_hail-1,,Xiangyun,10_hail,sua⁴⁴kʰuɔ³³tsɿ³³,sua⁴⁴kʰuɔ³³tsɿ³³,s u/w a ⁴⁴ + kʰ u/w ɔ ³³ + ts ɿ ³³,,Allen2007,,,^s ua ⁴⁴ kʰ uɔ ³³ ts ɿ ³³$,default
+Luobenzhuo-10_hail-1,,Luobenzhuo,10_hail,ɕõ³³qʰao³¹,ɕõ³³qʰao³¹,ɕ õ ³³ + qʰ ao ³¹,,Allen2007,,,^ɕ õ ³³ qʰ ao ³¹$,default
+Zhoucheng-10_hail-1,,Zhoucheng,10_hail,sue⁴⁴kʰuɔ³³tsɿ³³,sue⁴⁴kʰuɔ³³tsɿ³³,s u/w e ⁴⁴ + kʰ u/w ɔ ³³ + ts ɿ ³³,,Allen2007,,,^s ue ⁴⁴ kʰ uɔ ³³ ts ɿ ³³$,default
+Jianchuan-100_bean-1,,Jianchuan,100_bean,tɯ²¹,tɯ²¹,t ɯ ²¹,,Allen2007,,,^t ɯ ²¹$,default
+Eryuan-100_bean-1,,Eryuan,100_bean,tɯ³¹,tɯ³¹,t ɯ ³¹,,Allen2007,,,^t ɯ ³¹$,default
+Heqing-100_bean-1,,Heqing,100_bean,tɯ³¹,tɯ³¹,t ɯ ³¹,,Allen2007,,,^t ɯ ³¹$,default
+Lanping-100_bean-1,,Lanping,100_bean,tiɯ²¹,tiɯ²¹,t i/j ɯ ²¹,,Allen2007,,,^t iɯ ²¹$,default
+Qiliqiao-100_bean-1,,Qiliqiao,100_bean,tɯ³¹,tɯ³¹,t ɯ ³¹,,Allen2007,,,^t ɯ ³¹$,default
+Yunlong-100_bean-1,,Yunlong,100_bean,dɯ³¹,dɯ³¹,d ɯ ³¹,,Allen2007,,,^d ɯ ³¹$,default
+Xiangyun-100_bean-1,,Xiangyun,100_bean,tou³¹,tou³¹,t ou ³¹,,Allen2007,,,^t ou ³¹$,default
+Luobenzhuo-100_bean-1,,Luobenzhuo,100_bean,dɯ⁴²,dɯ⁴²,d ɯ ⁴²,,Allen2007,,,^d ɯ ⁴²$,default
+Zhoucheng-100_bean-1,,Zhoucheng,100_bean,tɯ³¹,tɯ³¹,t ɯ ³¹,,Allen2007,,,^t ɯ ³¹$,default
+Jianchuan-101_pea-1,,Jianchuan,101_pea,tɯ²¹sɿ³¹tsɿ³³,tɯ²¹sɿ³¹tsɿ³³,t ɯ ²¹ + s ɿ ³¹ + ts ɿ ³³,,Allen2007,,,^t ɯ ²¹ s ɿ ³¹ ts ɿ ³³$,default
+Eryuan-101_pea-1,,Eryuan,101_pea,tɯ³¹lɯ³¹tsʰɯ³¹,tɯ³¹lɯ³¹tsʰɯ³¹,t ɯ ³¹ + l ɯ ³¹ + tsʰ ɯ ³¹,,Allen2007,,,^t ɯ ³¹ l ɯ ³¹ tsʰ ɯ ³¹$,default
+Heqing-101_pea-1,,Heqing,101_pea,tɯ³¹tsʰɯ³²tsɿ³³,tɯ³¹tsʰɯ³²tsɿ³³,t ɯ ³¹ + tsʰ ɯ ³² + ts ɿ ³³,,Allen2007,,,^t ɯ ³¹ tsʰ ɯ ³² ts ɿ ³³$,default
+Lanping-101_pea-1,,Lanping,101_pea,tiɯ²¹liɯ²¹tsʰɯ²¹,tiɯ²¹liɯ²¹tsʰɯ²¹,t i/j ɯ ²¹ + l i/j ɯ ²¹ + tsʰ ɯ ²¹,,Allen2007,,,^t iɯ ²¹ l iɯ ²¹ tsʰ ɯ ²¹$,default
+Qiliqiao-101_pea-1,,Qiliqiao,101_pea,tɯ³¹tsʰɯ³¹,tɯ³¹tsʰɯ³¹,t ɯ ³¹ + tsʰ ɯ ³¹,,Allen2007,,,^t ɯ ³¹ tsʰ ɯ ³¹$,default
+Yunlong-101_pea-1,,Yunlong,101_pea,dɯ³¹lɯ³¹tsʰɯ³¹,dɯ³¹lɯ³¹tsʰɯ³¹,d ɯ ³¹ + l ɯ ³¹ + tsʰ ɯ ³¹,,Allen2007,,,^d ɯ ³¹ l ɯ ³¹ tsʰ ɯ ³¹$,default
+Xiangyun-101_pea-1,,Xiangyun,101_pea,tou³¹tsʰou³¹tsɿ³³,tou³¹tsʰou³¹tsɿ³³,t ou ³¹ + tsʰ ou ³¹ + ts ɿ ³³,,Allen2007,,,^t ou ³¹ tsʰ ou ³¹ ts ɿ ³³$,default
+Luobenzhuo-101_pea-1,,Luobenzhuo,101_pea,dɯ⁴²tsʰɿ³³,dɯ⁴²tsʰɿ³³,d ɯ ⁴² + tsʰ ɿ ³³,,Allen2007,,,^d ɯ ⁴² tsʰ ɿ ³³$,default
+Zhoucheng-101_pea-1,,Zhoucheng,101_pea,tɯ³¹tsʰɯ³¹,tɯ³¹tsʰɯ³¹,t ɯ ³¹ + tsʰ ɯ ³¹,,Allen2007,,,^t ɯ ³¹ tsʰ ɯ ³¹$,default
+Jianchuan-102_soybean-1,,Jianchuan,102_soybean,sɛ̃⁵⁵tsɿ³³tɯ²¹,sɛ̃⁵⁵tsɿ³³tɯ²¹,s ɛ̃ ⁵⁵ + ts ɿ ³³ + t ɯ ²¹,,Allen2007,,,^s ɛ̃ ⁵⁵ ts ɿ ³³ t ɯ ²¹$,default
+Eryuan-102_soybean-1,,Eryuan,102_soybean,pɛ⁴⁴xue³⁵tɯ³¹,pɛ⁴⁴xue³⁵tɯ³¹,p ɛ ⁴⁴ + x u/w e ³⁵ + t ɯ ³¹,,Allen2007,,,^p ɛ ⁴⁴ x ue ³⁵ t ɯ ³¹$,default
+Heqing-102_soybean-1,,Heqing,102_soybean,pɛ⁴²tɯ³¹tsɿ³³,pɛ⁴²tɯ³¹tsɿ³³,p ɛ ⁴² + t ɯ ³¹ + ts ɿ ³³,,Allen2007,,,^p ɛ ⁴² t ɯ ³¹ ts ɿ ³³$,default
+Lanping-102_soybean-1,,Lanping,102_soybean,pa⁴⁴tiɯ²¹,pa⁴⁴tiɯ²¹,p a ⁴⁴ + t i/j ɯ ²¹,,Allen2007,,,^p a ⁴⁴ t iɯ ²¹$,default
+Qiliqiao-102_soybean-1,,Qiliqiao,102_soybean,sɿ³⁵tsɿ³³tɯ³¹,sɿ³⁵tsɿ³³tɯ³¹,s ɿ ³⁵ + ts ɿ ³³ + t ɯ ³¹,,Allen2007,,,^s ɿ ³⁵ ts ɿ ³³ t ɯ ³¹$,default
+Yunlong-102_soybean-1,,Yunlong,102_soybean,pɛ⁴⁴dɯ³¹tsɿ³³,pɛ⁴⁴dɯ³¹tsɿ³³,p ɛ ⁴⁴ + d ɯ ³¹ + ts ɿ ³³,,Allen2007,,,^p ɛ ⁴⁴ d ɯ ³¹ ts ɿ ³³$,default
+Xiangyun-102_soybean-1,,Xiangyun,102_soybean,pɛ⁴²tou³¹,pɛ⁴²tou³¹,p ɛ ⁴² + t ou ³¹,,Allen2007,,,^p ɛ ⁴² t ou ³¹$,default
+Luobenzhuo-102_soybean-1,,Luobenzhuo,102_soybean,ɕy³³dɯ⁴²,ɕy³³dɯ⁴²,ɕ y ³³ + d ɯ ⁴²,,Allen2007,,,^ɕ y ³³ d ɯ ⁴²$,default
+Zhoucheng-102_soybean-1,,Zhoucheng,102_soybean,sɿ⁵⁵sɿ⁴⁴tɯ³¹,sɿ⁵⁵sɿ⁴⁴tɯ³¹,s ɿ ⁵⁵ + s ɿ ⁴⁴ + t ɯ ³¹,,Allen2007,,,^s ɿ ⁵⁵ s ɿ ⁴⁴ t ɯ ³¹$,default
+Jianchuan-103_pumpkin-1,,Jianchuan,103_pumpkin,tɕi⁵⁵kua⁵⁵,tɕi⁵⁵kua⁵⁵,tɕ i ⁵⁵ + k u/w a ⁵⁵,,Allen2007,,,^tɕ i ⁵⁵ k ua ⁵⁵$,default
+Eryuan-103_pumpkin-1,,Eryuan,103_pumpkin,e⁵⁵kua⁵⁵,e⁵⁵kua⁵⁵,e ⁵⁵ + k u/w a ⁵⁵,,Allen2007,,,^e ⁵⁵ k ua ⁵⁵$,default
+Heqing-103_pumpkin-1,,Heqing,103_pumpkin,na⁵⁵kua⁵⁵,na⁵⁵kua⁵⁵,n a ⁵⁵ + k u/w a ⁵⁵,,Allen2007,,,^n a ⁵⁵ k ua ⁵⁵$,default
+Lanping-103_pumpkin-1,,Lanping,103_pumpkin,tɕĩ⁵⁵kũã⁵⁵,tɕĩ⁵⁵kũã⁵⁵,tɕ ĩ ⁵⁵ + k ũ/w ã ⁵⁵,,Allen2007,,,^tɕ ĩ ⁵⁵ k ũã ⁵⁵$,default
+Qiliqiao-103_pumpkin-1,,Qiliqiao,103_pumpkin,na⁴²kua³³,na⁴²kua³³,n a ⁴² + k u/w a ³³,,Allen2007,,,^n a ⁴² k ua ³³$,default
+Yunlong-103_pumpkin-1,,Yunlong,103_pumpkin,tɕo⁵⁵kua⁵⁵,tɕo⁵⁵kua⁵⁵,tɕ o ⁵⁵ + k u/w a ⁵⁵,,Allen2007,,,^tɕ o ⁵⁵ k ua ⁵⁵$,default
+Xiangyun-103_pumpkin-1,,Xiangyun,103_pumpkin,tɕi⁵⁵kua⁵⁵,tɕi⁵⁵kua⁵⁵,tɕ i ⁵⁵ + k u/w a ⁵⁵,,Allen2007,,,^tɕ i ⁵⁵ k ua ⁵⁵$,default
+Luobenzhuo-103_pumpkin-1,,Luobenzhuo,103_pumpkin,ɤ⁴⁴,ɤ⁴⁴,ɤ ⁴⁴,,Allen2007,,,^ɤ ⁴⁴$,default
+Zhoucheng-103_pumpkin-1,,Zhoucheng,103_pumpkin,na³⁵kua³⁵,na³⁵kua³⁵,n a ³⁵ + k u/w a ³⁵,,Allen2007,,,^n a ³⁵ k ua ³⁵$,default
+Jianchuan-104_cucumber-1,,Jianchuan,104_cucumber,pʰo⁴⁴,pʰo⁴⁴,pʰ o ⁴⁴,,Allen2007,,,^pʰ o ⁴⁴$,default
+Eryuan-104_cucumber-1,,Eryuan,104_cucumber,pʰɔ⁴⁴,pʰɔ⁴⁴,pʰ ɔ ⁴⁴,,Allen2007,,,^pʰ ɔ ⁴⁴$,default
+Heqing-104_cucumber-1,,Heqing,104_cucumber,pʰɔu⁴⁴,pʰɔu⁴⁴,pʰ ɔu ⁴⁴,,Allen2007,,,^pʰ ɔu ⁴⁴$,default
+Lanping-104_cucumber-1,,Lanping,104_cucumber,pʰao³³,pʰao³³,pʰ ao ³³,,Allen2007,,,^pʰ ao ³³$,default
+Qiliqiao-104_cucumber-1,,Qiliqiao,104_cucumber,pʰɔ⁴⁴,pʰɔ⁴⁴,pʰ ɔ ⁴⁴,,Allen2007,,,^pʰ ɔ ⁴⁴$,default
+Yunlong-104_cucumber-1,,Yunlong,104_cucumber,pʰu⁴⁴,pʰu⁴⁴,pʰ u ⁴⁴,,Allen2007,,,^pʰ u ⁴⁴$,default
+Xiangyun-104_cucumber-1,,Xiangyun,104_cucumber,pʰɔ⁴⁴,pʰɔ⁴⁴,pʰ ɔ ⁴⁴,,Allen2007,,,^pʰ ɔ ⁴⁴$,default
+Luobenzhuo-104_cucumber-1,,Luobenzhuo,104_cucumber,pʰao⁵⁵,pʰao⁵⁵,pʰ ao ⁵⁵,,Allen2007,,,^pʰ ao ⁵⁵$,default
+Zhoucheng-104_cucumber-1,,Zhoucheng,104_cucumber,pʰo⁴⁴,pʰo⁴⁴,pʰ o ⁴⁴,,Allen2007,,,^pʰ o ⁴⁴$,default
+Jianchuan-105_vegetable-1,,Jianchuan,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Eryuan-105_vegetable-1,,Eryuan,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Heqing-105_vegetable-1,,Heqing,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Lanping-105_vegetable-1,,Lanping,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Qiliqiao-105_vegetable-1,,Qiliqiao,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Yunlong-105_vegetable-1,,Yunlong,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Xiangyun-105_vegetable-1,,Xiangyun,105_vegetable,tsʰou³¹,tsʰou³¹,tsʰ ou ³¹,,Allen2007,,,^tsʰ ou ³¹$,default
+Luobenzhuo-105_vegetable-1,,Luobenzhuo,105_vegetable,tsʰɿ⁵⁵,tsʰɿ⁵⁵,tsʰ ɿ ⁵⁵,,Allen2007,,,^tsʰ ɿ ⁵⁵$,default
+Zhoucheng-105_vegetable-1,,Zhoucheng,105_vegetable,tsʰɯ³¹,tsʰɯ³¹,tsʰ ɯ ³¹,,Allen2007,,,^tsʰ ɯ ³¹$,default
+Jianchuan-106_chillipepper-1,,Jianchuan,106_chillipepper,la³⁵tsɿ³³,la³⁵tsɿ³³,l a ³⁵ + ts ɿ ³³,,Allen2007,,,^l a ³⁵ ts ɿ ³³$,default
+Eryuan-106_chillipepper-1,,Eryuan,106_chillipepper,na³⁵tsɿ³¹,na³⁵tsɿ³¹,n a ³⁵ + ts ɿ ³¹,,Allen2007,,,^n a ³⁵ ts ɿ ³¹$,default
+Heqing-106_chillipepper-1,,Heqing,106_chillipepper,la³⁵tsɿ³³,la³⁵tsɿ³³,l a ³⁵ + ts ɿ ³³,,Allen2007,,,^l a ³⁵ ts ɿ ³³$,default
+Lanping-106_chillipepper-1,,Lanping,106_chillipepper,la⁴⁴tsɯ³³,la⁴⁴tsɯ³³,l a ⁴⁴ + ts ɯ ³³,,Allen2007,,,^l a ⁴⁴ ts ɯ ³³$,default
+Qiliqiao-106_chillipepper-1,,Qiliqiao,106_chillipepper,la³⁵tsɿ³¹,la³⁵tsɿ³¹,l a ³⁵ + ts ɿ ³¹,,Allen2007,,,^l a ³⁵ ts ɿ ³¹$,default
+Yunlong-106_chillipepper-1,,Yunlong,106_chillipepper,la³⁵tsɿ³¹,la³⁵tsɿ³¹,l a ³⁵ + ts ɿ ³¹,,Allen2007,,,^l a ³⁵ ts ɿ ³¹$,default
+Xiangyun-106_chillipepper-1,,Xiangyun,106_chillipepper,la³⁵tsɿ³¹,la³⁵tsɿ³¹,l a ³⁵ + ts ɿ ³¹,,Allen2007,,,^l a ³⁵ ts ɿ ³¹$,default
+Luobenzhuo-106_chillipepper-1,,Luobenzhuo,106_chillipepper,lao³¹zi³¹,lao³¹zi³¹,l ao ³¹ + z i ³¹,,Allen2007,,,^l ao ³¹ z i ³¹$,default
+Zhoucheng-106_chillipepper-1,,Zhoucheng,106_chillipepper,la³⁵tsɿ³³,la³⁵tsɿ³³,l a ³⁵ + ts ɿ ³³,,Allen2007,,,^l a ³⁵ ts ɿ ³³$,default
+Jianchuan-107_pepper-1,,Jianchuan,107_pepper,su⁵⁵,su⁵⁵,s u ⁵⁵,,Allen2007,,,^s u ⁵⁵$,default
+Eryuan-107_pepper-1,,Eryuan,107_pepper,su³⁵,su³⁵,s u ³⁵,,Allen2007,,,^s u ³⁵$,default
+Heqing-107_pepper-1,,Heqing,107_pepper,su⁵⁵,su⁵⁵,s u ⁵⁵,,Allen2007,,,^s u ⁵⁵$,default
+Lanping-107_pepper-1,,Lanping,107_pepper,su⁵⁵,su⁵⁵,s u ⁵⁵,,Allen2007,,,^s u ⁵⁵$,default
+Qiliqiao-107_pepper-1,,Qiliqiao,107_pepper,ji³¹tɕo³⁵,ji³¹tɕo³⁵,j i ³¹ + tɕ o ³⁵,,Allen2007,,,^j i ³¹ tɕ o ³⁵$,default
+Yunlong-107_pepper-1,,Yunlong,107_pepper,su³⁵,su³⁵,s u ³⁵,,Allen2007,,,^s u ³⁵$,default
+Xiangyun-107_pepper-1,,Xiangyun,107_pepper,su³⁵,su³⁵,s u ³⁵,,Allen2007,,,^s u ³⁵$,default
+Luobenzhuo-107_pepper-1,,Luobenzhuo,107_pepper,ɕo⁵⁵nɛ³¹,ɕo⁵⁵nɛ³¹,ɕ o ⁵⁵ + n ɛ ³¹,,Allen2007,,,^ɕ o ⁵⁵ n ɛ ³¹$,default
+Zhoucheng-107_pepper-1,,Zhoucheng,107_pepper,su³⁵,su³⁵,s u ³⁵,,Allen2007,,,^s u ³⁵$,default
+Jianchuan-108_walnut-1,,Jianchuan,108_walnut,ɣou²¹tou²¹,ɣou²¹tou²¹,ɣ ou ²¹ + t ou ²¹,,Allen2007,,,^ɣ ou ²¹ t ou ²¹$,default
+Eryuan-108_walnut-1,,Eryuan,108_walnut,ɔ²¹tɔ²¹,ɔ²¹tɔ²¹,ɔ ²¹ + t ɔ ²¹,,Allen2007,,,^ɔ ²¹ t ɔ ²¹$,default
+Heqing-108_walnut-1,,Heqing,108_walnut,ɣɔu²¹tɔ²¹,ɣɔu²¹tɔ²¹,ɣ ɔu ²¹ + t ɔ ²¹,,Allen2007,,,^ɣ ɔu ²¹ t ɔ ²¹$,default
+Lanping-108_walnut-1,,Lanping,108_walnut,wɔ³³tuɔ³¹,wɔ³³tuɔ³¹,w ɔ ³³ + t u/w ɔ ³¹,,Allen2007,,,^wɔ ³³ t uɔ ³¹$,default
+Qiliqiao-108_walnut-1,,Qiliqiao,108_walnut,ɔ²¹tɔ²¹,ɔ²¹tɔ²¹,ɔ ²¹ + t ɔ ²¹,,Allen2007,,,^ɔ ²¹ t ɔ ²¹$,default
+Yunlong-108_walnut-1,,Yunlong,108_walnut,ʁɔ²¹tɔ²¹,ʁɔ²¹tɔ²¹,ʁ ɔ ²¹ + t ɔ ²¹,,Allen2007,,,^ʁ ɔ ²¹ t ɔ ²¹$,default
+Xiangyun-108_walnut-1,,Xiangyun,108_walnut,ɣɔ²¹tɔ²¹,ɣɔ²¹tɔ²¹,ɣ ɔ ²¹ + t ɔ ²¹,,Allen2007,,,^ɣ ɔ ²¹ t ɔ ²¹$,default
+Luobenzhuo-108_walnut-1,,Luobenzhuo,108_walnut,ʔo⁴⁴tɤ³¹,ʔo⁴⁴tɤ³¹,ʔ o ⁴⁴ + t ɤ ³¹,,Allen2007,,,^ʔ o ⁴⁴ t ɤ ³¹$,default
+Zhoucheng-108_walnut-1,,Zhoucheng,108_walnut,ɔ²¹tɔ²¹,ɔ²¹tɔ²¹,ɔ ²¹ + t ɔ ²¹,,Allen2007,,,^ɔ ²¹ t ɔ ²¹$,default
+Jianchuan-109_peach-1,,Jianchuan,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Eryuan-109_peach-1,,Eryuan,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Heqing-109_peach-1,,Heqing,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Lanping-109_peach-1,,Lanping,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Qiliqiao-109_peach-1,,Qiliqiao,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Yunlong-109_peach-1,,Yunlong,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Xiangyun-109_peach-1,,Xiangyun,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Luobenzhuo-109_peach-1,,Luobenzhuo,109_peach,tao²¹χao³³,tao²¹χao³³,t ao ²¹ + χ ao ³³,,Allen2007,,,^t ao ²¹ χ ao ³³$,default
+Zhoucheng-109_peach-1,,Zhoucheng,109_peach,ta²¹,ta²¹,t a ²¹,,Allen2007,,,^t a ²¹$,default
+Jianchuan-11_snow-1,,Jianchuan,11_snow,sue⁴⁴,sue⁴⁴,s u/w e ⁴⁴,,Allen2007,,,^s ue ⁴⁴$,default
+Eryuan-11_snow-1,,Eryuan,11_snow,sue⁴⁴,sue⁴⁴,s u/w e ⁴⁴,,Allen2007,,,^s ue ⁴⁴$,default
+Heqing-11_snow-1,,Heqing,11_snow,sʰue⁴⁴,sʰue⁴⁴,sʰ u/w e ⁴⁴,,Allen2007,,,^sʰ ue ⁴⁴$,default
+Lanping-11_snow-1,,Lanping,11_snow,sue⁴⁴,sue⁴⁴,s u/w e ⁴⁴,,Allen2007,,,^s ue ⁴⁴$,default
+Qiliqiao-11_snow-1,,Qiliqiao,11_snow,ɕy⁴⁴,ɕy⁴⁴,ɕ y ⁴⁴,,Allen2007,,,^ɕ y ⁴⁴$,default
+Yunlong-11_snow-1,,Yunlong,11_snow,ɕyɛ⁴⁴,ɕyɛ⁴⁴,ɕ y/ɥ ɛ ⁴⁴,,Allen2007,,,^ɕ yɛ ⁴⁴$,default
+Xiangyun-11_snow-1,,Xiangyun,11_snow,sue⁴⁴,sue⁴⁴,s u/w e ⁴⁴,,Allen2007,,,^s ue ⁴⁴$,default
+Luobenzhuo-11_snow-1,,Luobenzhuo,11_snow,suɛ⁵⁵,suɛ⁵⁵,s u/w ɛ ⁵⁵,,Allen2007,,,^s uɛ ⁵⁵$,default
+Zhoucheng-11_snow-1,,Zhoucheng,11_snow,sue⁴⁴,sue⁴⁴,s u/w e ⁴⁴,,Allen2007,,,^s ue ⁴⁴$,default
+Jianchuan-110_pear-1,,Jianchuan,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Eryuan-110_pear-1,,Eryuan,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Heqing-110_pear-1,,Heqing,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Lanping-110_pear-1,,Lanping,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Qiliqiao-110_pear-1,,Qiliqiao,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Yunlong-110_pear-1,,Yunlong,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Xiangyun-110_pear-1,,Xiangyun,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Luobenzhuo-110_pear-1,,Luobenzhuo,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Zhoucheng-110_pear-1,,Zhoucheng,110_pear,ɕy⁵⁵li⁵⁵,ɕy⁵⁵li⁵⁵,ɕ y ⁵⁵ + l i ⁵⁵,,Allen2007,,,^ɕ y ⁵⁵ l i ⁵⁵$,default
+Jianchuan-111_persimmon-1,,Jianchuan,111_persimmon,tʰa⁴⁴tsɿ²¹,tʰa⁴⁴tsɿ²¹,tʰ a ⁴⁴ + ts ɿ ²¹,,Allen2007,,,^tʰ a ⁴⁴ ts ɿ ²¹$,default
+Eryuan-111_persimmon-1,,Eryuan,111_persimmon,tʰa⁴⁴tsɿ²¹,tʰa⁴⁴tsɿ²¹,tʰ a ⁴⁴ + ts ɿ ²¹,,Allen2007,,,^tʰ a ⁴⁴ ts ɿ ²¹$,default
+Heqing-111_persimmon-1,,Heqing,111_persimmon,tʰa⁴⁴tsɿ²¹,tʰa⁴⁴tsɿ²¹,tʰ a ⁴⁴ + ts ɿ ²¹,,Allen2007,,,^tʰ a ⁴⁴ ts ɿ ²¹$,default
+Lanping-111_persimmon-1,,Lanping,111_persimmon,tʰa⁴⁴tsɯ⁴⁴,tʰa⁴⁴tsɯ⁴⁴,tʰ a ⁴⁴ + ts ɯ ⁴⁴,,Allen2007,,,^tʰ a ⁴⁴ ts ɯ ⁴⁴$,default
+Qiliqiao-111_persimmon-1,,Qiliqiao,111_persimmon,tʰa⁴⁴tsɿ²¹,tʰa⁴⁴tsɿ²¹,tʰ a ⁴⁴ + ts ɿ ²¹,,Allen2007,,,^tʰ a ⁴⁴ ts ɿ ²¹$,default
+Yunlong-111_persimmon-1,,Yunlong,111_persimmon,sɿ⁴⁴xua⁴⁴,sɿ⁴⁴xua⁴⁴,s ɿ ⁴⁴ + x u/w a ⁴⁴,,Allen2007,,,^s ɿ ⁴⁴ x ua ⁴⁴$,default
+Xiangyun-111_persimmon-1,,Xiangyun,111_persimmon,tʰa⁴⁴tsɿ²¹,tʰa⁴⁴tsɿ²¹,tʰ a ⁴⁴ + ts ɿ ²¹,,Allen2007,,,^tʰ a ⁴⁴ ts ɿ ²¹$,default
+Luobenzhuo-111_persimmon-1,,Luobenzhuo,111_persimmon,cʰa⁵⁵dʐʅ̃³³,cʰa⁵⁵dʐʅ̃³³,cʰ a ⁵⁵ + ɖʐ ʅ̃ ³³,,Allen2007,,,^cʰ a ⁵⁵ dʐ ʅ̃ ³³$,default
+Zhoucheng-111_persimmon-1,,Zhoucheng,111_persimmon,tʰa⁴⁴tsɿ²¹,tʰa⁴⁴tsɿ²¹,tʰ a ⁴⁴ + ts ɿ ²¹,,Allen2007,,,^tʰ a ⁴⁴ ts ɿ ²¹$,default
+Jianchuan-112_grass-1,,Jianchuan,112_grass,tsʰu³³,tsʰu³³,tsʰ u ³³,,Allen2007,,,^tsʰ u ³³$,default
+Eryuan-112_grass-1,,Eryuan,112_grass,tsʰɔ³³,tsʰɔ³³,tsʰ ɔ ³³,,Allen2007,,,^tsʰ ɔ ³³$,default
+Heqing-112_grass-1,,Heqing,112_grass,tsʰu³³,tsʰu³³,tsʰ u ³³,,Allen2007,,,^tsʰ u ³³$,default
+Lanping-112_grass-1,,Lanping,112_grass,tsʰu³³,tsʰu³³,tsʰ u ³³,,Allen2007,,,^tsʰ u ³³$,default
+Qiliqiao-112_grass-1,,Qiliqiao,112_grass,ʧʰu³³,ʧʰu³³,tʃʰ u ³³,,Allen2007,,,^ʧʰ u ³³$,default
+Yunlong-112_grass-1,,Yunlong,112_grass,tsʰu³³,tsʰu³³,tsʰ u ³³,,Allen2007,,,^tsʰ u ³³$,default
+Xiangyun-112_grass-1,,Xiangyun,112_grass,tsʰu³³,tsʰu³³,tsʰ u ³³,,Allen2007,,,^tsʰ u ³³$,default
+Luobenzhuo-112_grass-1,,Luobenzhuo,112_grass,ʧʰʊ⁴⁴,ʧʰʊ⁴⁴,tʃʰ ʊ ⁴⁴,,Allen2007,,,^ʧʰ ʊ ⁴⁴$,default
+Zhoucheng-112_grass-1,,Zhoucheng,112_grass,tsʰu³³,tsʰu³³,tsʰ u ³³,,Allen2007,,,^tsʰ u ³³$,default
+Jianchuan-113_mushroom-1,,Jianchuan,113_mushroom,sɛ̃³³,sɛ̃³³,s ɛ̃ ³³,,Allen2007,,,^s ɛ̃ ³³$,default
+Eryuan-113_mushroom-1,,Eryuan,113_mushroom,ʂɛ³³,ʂɛ³³,ʂ ɛ ³³,,Allen2007,,,^ʂ ɛ ³³$,default
+Heqing-113_mushroom-1,,Heqing,113_mushroom,sʰɿ³³,sʰɿ³³,sʰ ɿ ³³,,Allen2007,,,^sʰ ɿ ³³$,default
+Lanping-113_mushroom-1,,Lanping,113_mushroom,sɛ̃³³,sɛ̃³³,s ɛ̃ ³³,,Allen2007,,,^s ɛ̃ ³³$,default
+Qiliqiao-113_mushroom-1,,Qiliqiao,113_mushroom,sɛ³³,sɛ³³,s ɛ ³³,,Allen2007,,,^s ɛ ³³$,default
+Yunlong-113_mushroom-1,,Yunlong,113_mushroom,sɛ³³,sɛ³³,s ɛ ³³,,Allen2007,,,^s ɛ ³³$,default

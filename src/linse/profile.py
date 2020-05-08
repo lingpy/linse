@@ -3,6 +3,7 @@ from linse.segment import ipa
 from linse.models import *
 from linse.annotate import _token2soundclass, _token2clts, _codepoint
 from csvw.dsv import UnicodeDictReader
+import codecs
 
 class Form(object):
 
@@ -123,8 +124,25 @@ class DraftProfile(object):
         """
         columns = columns or ['Grapheme']
         table = self.get_profile(*columns, transform=transform, key=key)
-        with open(filename, 'w') as f:
+        with codecs.open(filename, 'w', 'utf-8') as f:
             for row in table:
                 f.write('\t'.join([str(x) for x in row])+'\n')
+
+    def get_exceptions(self):
+        """
+        Tabulate exceptions.
+        """
+        table = [['Lexeme', 'Replacement', 'Comment']]
+        for (form, exception), metas in self.exceptions.items():
+            table.append([
+                form,
+                '?',
+                exception+' ({0} cases)'.format(len(metas))])
+        return table
+    
+    def write_exceptions(self, filename):
+        with codecs.open(filename, 'w', 'utf-8') as f:
+            for row in self.get_exceptions():
+                f.write('\t'.join(row)+'\n')
 
 
