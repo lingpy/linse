@@ -5,6 +5,7 @@ from linse.annotate import _token2soundclass, _token2clts, _codepoint
 from csvw.dsv import UnicodeDictReader
 import codecs
 
+
 class Form(object):
 
     def __init__(self, text, **kw):
@@ -18,7 +19,12 @@ class Form(object):
 
 class DraftProfile(object):
 
-    def __init__(self, *forms, preceding=None, following=None, segmenter=None,
+    def __init__(
+            self,
+            *forms,
+            preceding=None,
+            following=None,
+            segmenter=None,
             **kw):
         """
         Initialize a draft profile from a list of forms.
@@ -44,10 +50,21 @@ class DraftProfile(object):
             self.add_forms(*forms)
 
     @classmethod
-    def from_cldf(clf, filename, text='Form', preceding=None, following=None,
-            segmenter=None, language=None, **kw):
-        profile = clf(preceding=preceding, following=following,
-                segmenter=segmenter, **kw)
+    def from_cldf(
+            clf,
+            filename,
+            text='Form',
+            preceding=None,
+            following=None,
+            segmenter=None,
+            language=None,
+            **kw):
+        profile = clf(
+                preceding=preceding,
+                following=following,
+                segmenter=segmenter,
+                **kw
+                )
         with UnicodeDictReader(filename, delimiter=',') as reader:
             for row in reader:
                 if not language or row['Language_ID'] == language:
@@ -59,7 +76,8 @@ class DraftProfile(object):
         Add new forms to the profile.
         """
         for i, form in enumerate(forms):
-            meta = form.kw if hasattr(form, 'kw') else {'ID': i+self.counter, 'text': form}
+            meta = form.kw if hasattr(
+                    form, 'kw') else {'ID': i+self.counter, 'text': form}
             try:
                 segs = self.segmentize(meta)
                 segs[0] = self.preceding+segs[0]
@@ -89,8 +107,12 @@ class DraftProfile(object):
         - Languages
         """
         columns = columns or ['Grapheme']
+
+        def identity(x):
+            return x
+
         if not key:
-            key = lambda x: x
+            key = identity
         # not all columns are allowed
         transform = transform or {}
         modify = {
@@ -98,12 +120,16 @@ class DraftProfile(object):
                 'SCA': lambda x, y: _token2soundclass(x, 'sca'),
                 'BIPA': lambda x, y: _token2clts(x)[0],
                 'CLTS': lambda x, y: _token2clts(x)[1],
-                'Unicode': lambda x, y: ' '.join([_codepoint(c) for c in
-                    x]),
-                'Examples': lambda x, y: ', '.join(sorted(set([item['text'] for
-                    item in y]))[:3]),
+                'Unicode': lambda x, y: ' '.join(
+                    [_codepoint(c) for c in x]
+                    ),
+                'Examples': lambda x, y: ', '.join(
+                    sorted(set([item['text'] for item in y]))[:3]
+                    ),
                 'Frequency': lambda x, y: len(y),
-                'Languages': lambda x, y: ', '.join(sorted(set([item['Language_ID'] for item in y])))
+                'Languages': lambda x, y: ', '.join(
+                    sorted(set([item['Language_ID'] for item in y]))
+                    )
                 }
         modify.update(transform)
 
@@ -139,10 +165,8 @@ class DraftProfile(object):
                 '?',
                 exception+' ({0} cases)'.format(len(metas))])
         return table
-    
+
     def write_exceptions(self, filename):
         with codecs.open(filename, 'w', 'utf-8') as f:
             for row in self.get_exceptions():
                 f.write('\t'.join(row)+'\n')
-
-

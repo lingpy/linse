@@ -7,6 +7,7 @@ import json
 
 __all__ = ['data_path', 'get_CLTS', 'get_NORMALIZE']
 
+
 def data_path(*comps):
     return Path(__file__).parent.joinpath('data', *comps)
 

@@ -12,7 +12,8 @@ class TypedSequence(list):
         """
         :param type_: Type class for the items of the sequence
         :param iterable: Iterable of items
-        :param strict: Boolean forcing type check if `True` and type cast if `False`
+        :param strict: Boolean forcing type check if `True` and type cast if
+            `False`
         """
         self._type = type_
         self._strict = strict
@@ -37,16 +38,22 @@ class TypedSequence(list):
         return ' '.join([self.__class__.write(x) for x in self])
 
     def __add__(self, other):
-        return TypedSequence(self._type, itertools.chain(self, other), strict=self._strict)
+        return TypedSequence(
+                self._type, itertools.chain(self, other), strict=self._strict)
 
     def append(self, item):
         list.append(self, self.__class__.read(item, self._type, self._strict))
 
     def extend(self, other):
-        list.extend(self, TypedSequence(self._type, other, strict=self._strict))
+        list.extend(
+                self, TypedSequence(self._type, other, strict=self._strict))
 
     def __setitem__(self, index, item):
-        list.__setitem__(self, index, self.__class__.read(item, self._type, self._strict))
+        list.__setitem__(
+                self, index, self.__class__.read(
+                    item, self._type, self._strict
+                    )
+                )
 
 
 class words(TypedSequence):  # noqa: N801

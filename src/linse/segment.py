@@ -3,8 +3,8 @@ Segmenting is the process of converting a written word to a sequence of tokens.
 
 This module provides functions to segment various kinds of text.
 
-An alternative method to segment text - based on orthography profiles - is implemented
-in the `segments` package.
+An alternative method to segment text - based on orthography profiles - is
+implemented in the `segments` package.
 """
 import re
 
@@ -117,10 +117,11 @@ def ipa(istring,
             merge = False
 
         elif char in combiners:
-            # add the combiner to the previous entry in `out`; if there is no previous characters
-            # (i.e., sequence starts with a combiner, which is something we perhaps should not
-            # accept, see discussion at https://github.com/lingpy/lingpy/issues/365, append the
-            # combiner to a null phoneme glyph.
+            # add the combiner to the previous entry in `out`; if there is no
+            # previous characters (i.e., sequence starts with a combiner, which
+            # is something we perhaps should not accept, see discussion at
+            # https://github.com/lingpy/lingpy/issues/365, append the combiner
+            # to a null phoneme glyph.
             if not out:
                 # empty list, i.e., no previous entry
                 out = ['\u2205' + char]
@@ -131,7 +132,8 @@ def ipa(istring,
 
         elif char in stress:
             out.append(char)
-            # FIXME: be careful about canceling the start-flag here, but seems to make sense so far!
+            # FIXME: be careful about canceling the start-flag here, but seems
+            # to make sense so far!
             merge = True
             tone = False
             vowel = False
