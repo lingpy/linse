@@ -9,7 +9,8 @@ from linse.annotate import soundclass
 __all__ = ['syllables', 'morphemes', 'flatten']
 
 
-def _iter_syllables(sequence, prosodies, vowels=(7,), tones=(8,), max_vowels=2):
+def _iter_syllables(
+        sequence, prosodies, vowels=(7,), tones=(8,), max_vowels=2):
     """
     Find syllable breakpoints for a set of tokens, based on their prosody.
 
@@ -51,7 +52,7 @@ def syllables(sequence,
               tones=(8,),
               max_vowels=2):
     """
-    Carry out a simple syllabification of a sequence, using sonority as a proxy.
+    Carry out a simple syllabification analysis using sonority as a proxy.
 
     Parameters
     ----------
@@ -78,7 +79,8 @@ def syllables(sequence,
             seq.append(c)
 
     # get the sonority profile for the sequence
-    profile = ints(soundclass(seq, model=model, cldf=cldf, stress=stress, diacritics=diacritics))
+    profile = ints(soundclass(
+        seq, model=model, cldf=cldf, stress=stress, diacritics=diacritics))
     syls = [list(syllable) for syllable in _iter_syllables(
         seq, profile, max_vowels=max_vowels, vowels=vowels, tones=tones)]
 
@@ -103,10 +105,10 @@ def morphemes(sequence,
 
     Notes
     -----
-    Function splits a list of tokens into subsequent lists of morphemes if the list
-    contains morpheme separators. If no separators are found, but tonemarkers,
-    it will still split the string according to the tones. If you want to avoid
-    this behavior, set the keyword **split_on_tones** to False.
+    Function splits a list of tokens into subsequent lists of morphemes if the
+    list contains morpheme separators. If no separators are found, but
+    tonemarkers, it will still split the string according to the tones. If you
+    want to avoid this behavior, set the keyword **split_on_tones** to False.
 
     Returns
     -------

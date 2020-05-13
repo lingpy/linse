@@ -22,6 +22,11 @@ Releasing linse
   git commit -a -m "release <VERSION>"
   ```
 
+- Fetch the most recent data from pyclts:
+  ```shell script
+  $ clts dump --destination=LINES/src/linse/data/clts.zip
+  ```
+
 - Create a release tag:
   ```shell script
   git tag -a v<VERSION> -m"<VERSION> release"
