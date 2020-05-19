@@ -118,7 +118,7 @@ class DraftProfile(object):
         modify = {
                 'Grapheme': lambda x, y: x,
                 'SCA': lambda x, y: _token2soundclass(x, 'sca'),
-                'BIPA': lambda x, y: _token2clts(x)[0],
+                'IPA': lambda x, y: _token2clts(x)[0],
                 'CLTS': lambda x, y: _token2clts(x)[1],
                 'Unicode': lambda x, y: ' '.join(
                     [_codepoint(c) for c in x]
@@ -142,11 +142,26 @@ class DraftProfile(object):
             for col in columns:
                 row += [modify[col](char, meta)]
             table += [row]
-        return sorted(table, key=key)
+        table = sorted(table, key=key)
+        table = [columns]+table
+        return table
 
     def write_profile(self, filename, *columns, transform=None, key=None):
         """
         Write profile to file.
+
+        Notes
+        -----
+        Columns which are pre-defined are:
+        - Grapheme
+        - SCA
+        - BIPA
+        - CLTS
+        - Unicode
+        - Examples
+        - Frequency
+        - Languages
+
         """
         columns = columns or ['Grapheme']
         table = self.get_profile(*columns, transform=transform, key=key)
