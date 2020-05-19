@@ -6,7 +6,7 @@ from linse.typedsequence import ints, floats
 from linse.util import get_CLTS, get_NORMALIZE
 
 __all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
-        'codepoints', 'normalize', 'clts', 'bipa', 'CLTS', 'NORM']
+        'codepoints', 'normalize', 'clts', 'bipa', 'CLTS', 'NORM', 'seallable']
 
 REPLACEMENT = '\ufffd'
 CLTS = get_CLTS()
@@ -206,6 +206,69 @@ PROSODY_FORMATS = {
 }
 
 
+
+def _process_prosody(sonority):
+    """
+    Low-level processing of prosodic strings.
+    """
+    assert 9 not in sonority[1:-1]
+    assert sonority[0] == sonority[-1] == 9
+
+    # create the output values
+    psequence = []
+    first = True  # stores whether first syllable is currently being processed
+
+    for i in range(1, len(sonority) - 1):
+        # get a segment with context
+        a, b, c = sonority[i - 1], sonority[i], sonority[i + 1]
+
+        if b == 7:  # a vowel
+            if first:
+                psequence.append('X')
+                first = False
+            elif c == 9:  # last
+                psequence.append('Z')
+            else:
+                psequence.append('Y')
+        elif b == 8:  # a tone
+            psequence.append('T')
+        elif a >= b >= c or c == 8:  # descending
+            if c == 9:  # word final position
+                psequence.append('Z' if b == 7 else 'N')  # vowel or consonant
+            else:
+                if first:
+                    first = False
+                    psequence.append('A')
+                else:
+                    psequence.append('L')
+        elif b < c or a > b <= c or a < b <= c:  # ascending
+            # check for syllable first
+            if a == 9:
+                psequence.append('A')
+            elif a >= b:
+                if c == 9:
+                    psequence.append('N')
+                else:
+                    if psequence[-1] != 'A':
+                        psequence = psequence[:-1] + [psequence[-1].replace('L', 'M')] + ['B']
+                    else:
+                        psequence.append('C')
+            else:
+                psequence.append('C')
+        elif a < b > c:  # consonant peak
+            if first:
+                psequence.append('X')
+                first = False
+            else:
+                psequence.append('Y')
+        else:
+            raise ValueError(
+                "Conversion to prosodic string failed due to a condition which was not "
+                "defined in the convertion, for details compare the numerical string "
+                "{0} with the profile string {1}".format(sonority, psequence))
+    return psequence
+
+
 def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS,
         cldf=True):
     """
@@ -286,60 +349,7 @@ def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS,
         ints(soundclass(
             sequence, model='art', stress=stress, diacritics=diacritics, cldf=cldf)) + \
         [9]
-    assert 9 not in sonority[1:-1]
-
-    # create the output values
-    psequence = []
-    first = True  # stores whether first syllable is currently being processed
-
-    for i in range(1, len(sonority) - 1):
-        # get a segment with context
-        a, b, c = sonority[i - 1], sonority[i], sonority[i + 1]
-
-        if b == 7:  # a vowel
-            if first:
-                psequence.append('X')
-                first = False
-            elif c == 9:  # last
-                psequence.append('Z')
-            else:
-                psequence.append('Y')
-        elif b == 8:  # a tone
-            psequence.append('T')
-        elif a >= b >= c or c == 8:  # descending
-            if c == 9:  # word final position
-                psequence.append('Z' if b == 7 else 'N')  # vowel or consonant
-            else:
-                if first:
-                    first = False
-                    psequence.append('A')
-                else:
-                    psequence.append('L')
-        elif b < c or a > b <= c or a < b <= c:  # ascending
-            # check for syllable first
-            if a == 9:
-                psequence.append('A')
-            elif a >= b:
-                if c == 9:
-                    psequence.append('N')
-                else:
-                    if psequence[-1] != 'A':
-                        psequence = psequence[:-1] + [psequence[-1].replace('L', 'M')] + ['B']
-                    else:
-                        psequence.append('C')
-            else:
-                psequence.append('C')
-        elif a < b > c:  # consonant peak
-            if first:
-                psequence.append('X')
-                first = False
-            else:
-                psequence.append('Y')
-        else:
-            raise ValueError(
-                "Conversion to prosodic string failed due to a condition which was not "
-                "defined in the convertion, for details compare the numerical string "
-                "{0} with the profile string {1}".format(sonority, psequence))
+    psequence = _process_prosody(sonority)
 
     assert len(psequence) == len(sequence)
     conv = PROSODY_FORMATS.get(format, {})
@@ -452,10 +462,6 @@ def codepoints(sequence):
     return [' '.join(_codepoint(c) for c in s) for s in sequence]
 
 
-def sea_structure(sequence):
-    return [None for s in sequence]
-
-
 def _norm(segment):
     return ''.join([NORM.get(s, s) for s in segment])
 
@@ -499,4 +505,70 @@ def clts(sequence):
     with `pyclts`. 
     """
     return [_token2clts(segment)[1] for segment in sequence]
+
+
+def seallable(
+        sequence,
+        medials={
+            'j', 'w', 'jw', 'wj', 'i̯', 'u̯', 'i̯u̯', 'u̯i̯', 'iu', 'ui', 'y', 'ɥ', 'l',
+            'lj', 'lʲ', 'r', 'rj', 'rʲ', 'ʐ', 'ʑ', 'ʂ', 'ʂ'},
+        vowels=VOWELS,
+        tones=TONES,
+        diacritics=DIACRITICS,
+        stress=STRESS,
+        cldf=True,
+        unknown=REPLACEMENT,
+        ):
+    """
+    Check if a syllable conforms to the basic SEA syllable.
+    """
+    if not sequence:
+        raise ValueError('empty sequence passed to function')
+    if len(sequence) > 5:
+        return len(sequence) * [unknown]
+
+    cv = soundclass(sequence, model='cv', diacritics=diacritics, stress=stress, cldf=cldf)
+
+    ini, med, nuc, cod, ton = 5 * [False]
+
+    if 3 <= len(sequence) <= 5:
+        # first element must be the initial
+        ini = 'i' if cv[0] == 'C' else '?'
+        # last element must be tone
+        ton = 't' if cv[-1] == 'T' else '?'
+        # medial and coda can be missing
+        med, nuc, cod = 3 * [False]
+
+    # scenario the sequence has 5 elements, all slots must be filled
+    if len(sequence) == 5:
+        med = 'm' if sequence[1] in medials else '?'
+        cod = 'c' if cv[3] == 'C' else '?'
+        nuc = 'n' if cv[2] == 'V' else '?'
+    
+    # scenario the sequence has four slots filled, one must be missing, either
+    # coda or medial
+    elif len(sequence) == 4:
+        med = 'm' if sequence[1] in medials else None
+        if not med:
+            nuc = 'n' if cv[1] == 'V' else '?'
+            cod = 'c' if cv[2] == 'C' else '?'
+        else:
+            nuc = 'n' if cv[2] == 'V' else '?'
+
+    # scenario where the sequence has three slots filled, the second slot must
+    # be a nucleus
+    elif len(sequence) == 3:
+        nuc = 'n' if cv[1] == 'V' else '?'
+
+    # scenario with two elements only, means that the first element should be a
+    # consonant
+    elif len(sequence) == 2:
+        nuc = 'n' if cv[0] == 'V' else '?'
+        ton = 't' if cv[1] == 'T' else '?'
+
+    # if only one segment is given, it must be the vowel
+    else:
+        nuc = 'n' if cv[0] == 'V' else '?'
+
+    return [s for s in [ini, med, nuc, cod, ton] if s]
 

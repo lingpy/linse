@@ -108,10 +108,10 @@ def test_DraftProfile():
     assert len(profile2.graphemes) == 36
     with TemporaryDirectory('./') as tmp:
         profile1.write_profile(Path(tmp).joinpath('orthography.tsv'), 
-                'Grapheme', 'BIPA', 'Frequency')
+                'Grapheme', 'IPA', 'Frequency')
         profile3.write_exceptions(Path(tmp).joinpath('lexemes.tsv'))
     table = profile2.get_profile(
-            'Grapheme', 'CLTS', 'SCA', 'BIPA', 'Unicode', 'Examples',
+            'Grapheme', 'CLTS', 'SCA', 'IPA', 'Unicode', 'Examples',
             'Frequency', 'Languages')
     with pytest.raises(ValueError):
         DraftProfile('muti').get_profile('This')
