@@ -77,3 +77,23 @@ def test_soundclass():
     with pytest.raises(ValueError):
         soundclass(['A', 'O'], 'sca')
 
+
+@pytest.mark.parametrize(
+    'seq,res',
+    [
+        (['m', 'a', 't', '⁵'], ['i', 'n', 'c', 't']),
+        (['m', 'J', 'a', 't', '⁵'], ['i', '?', 'n', 'c', 't']),
+        (['m', 'j', 'a', 't', '⁵'], ['i', 'm', 'n', 'c', 't']),
+        (['m', 'ju', 'a', 't', '⁵'], ['i', '?', 'n', 'c', 't']),
+        (['m', 't', '⁵'], ['i', '?', 't']),
+        (['m', 'j', ], ['?', '?']),
+        (['a', '⁵'], ['n', 't']),
+        (['m', 'j', 'a', '³'], ['i', 'm', 'n', 't']),
+        (['a'], ['n']),
+        (['a', 'a', 'a', 'a', 'a', 'a'], ['?', '?', '?', '?', '?', '?']),
+    ]
+)
+def test_seallable(seq, res):
+    assert seallable(seq, res)
+    with pytest.raises(ValueError):
+        seallable([])
