@@ -528,6 +528,8 @@ def seallable(
         return len(sequence) * [unknown]
 
     cv = soundclass(sequence, model='cv', diacritics=diacritics, stress=stress, cldf=cldf)
+    if cldf:
+        sequence = [s.split('/')[1] if '/' in s else s for s in sequence]
 
     ini, med, nuc, cod, ton = 5 * [False]
 
