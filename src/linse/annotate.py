@@ -533,7 +533,8 @@ def seallable(
 
     if 3 <= len(sequence) <= 5:
         # first element must be the initial
-        ini = 'i' if cv[0] == 'C' else '?'
+        #ini = 'i' if cv[0] == 'C' else '?'
+        ini = 'i' if cv[0] == 'C' or cv[0]== 'V' else '?'
         # last element must be tone
         ton = 't' if cv[-1] == 'T' else '?'
         # medial and coda can be missing
@@ -555,10 +556,24 @@ def seallable(
         else:
             nuc = 'n' if cv[2] == 'V' else '?'
 
-    # scenario where the sequence has three slots filled, the second slot must
-    # be a nucleus
+    # scenario where the sequence has three slots filled, 
+    # case 1 : "ma¹³". The second token must be a vowel
+    # case 2 : "am¹³". The first token must be a vowel
     elif len(sequence) == 3:
-        nuc = 'n' if cv[1] == 'V' else '?'
+        if cv[1] == 'V':
+            if cv[0] == 'C':
+                nuc = 'n'
+            else:
+                ini = 'i'
+                nuc = 'n'
+        else:
+            if cv[0] == 'V':
+                ini = 'i'
+                nuc = 'n'
+            else:
+                ini = 'i'
+                nuc = '?'
+       #nuc = 'n' if cv[1] == 'V' elif  '?'
 
     # scenario with two elements only, means that the first element should be a
     # consonant
