@@ -533,8 +533,7 @@ def seallable(
 
     if 3 <= len(sequence) <= 5:
         # first element must be the initial
-        #ini = 'i' if cv[0] == 'C' else '?'
-        ini = 'i' if cv[0] == 'C' or cv[0]== 'V' else '?'
+        ini = 'i' if cv[0] == 'C' else '?'
         # last element must be tone
         ton = 't' if cv[-1] == 'T' else '?'
         # medial and coda can be missing
@@ -561,15 +560,13 @@ def seallable(
     # case 2 : "am¹³". The first token must be a vowel
     elif len(sequence) == 3:
         if cv[1] == 'V':
-            if cv[0] == 'C':
-                nuc = 'n'
-            else:
-                ini = 'i'
-                nuc = 'n'
-        else:
+            ini = 'i' if cv[0] == 'C' else '?'
+            nuc = 'n'
+        else: # cv[1] == 'C' or cv[1] == some random things 
             if cv[0] == 'V':
-                ini = 'i'
+                ini = None
                 nuc = 'n'
+                cod = 'c' if cv[1] == 'C' else '?'
             else:
                 ini = 'i'
                 nuc = '?'
