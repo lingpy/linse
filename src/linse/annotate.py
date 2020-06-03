@@ -548,7 +548,7 @@ def seallable(
     # scenario the sequence has four slots filled, one must be missing, either
     # coda or medial
     elif len(sequence) == 4:
-        med = 'm' if sequence[1] in medials else None
+        med = 'm' if sequence[1] in medials else False
         if not med:
             nuc = 'n' if cv[1] == 'V' else '?'
             cod = 'c' if cv[2] == 'C' else '?'
@@ -562,15 +562,9 @@ def seallable(
         if cv[1] == 'V':
             ini = 'i' if cv[0] == 'C' else '?'
             nuc = 'n'
-        else: # cv[1] == 'C' or cv[1] == some random things 
-            if cv[0] == 'V':
-                ini = None
-                nuc = 'n'
-                cod = 'c' if cv[1] == 'C' else '?'
-            else:
-                ini = 'i'
-                nuc = '?'
-       #nuc = 'n' if cv[1] == 'V' elif  '?'
+        elif cv[0] == 'V':
+            nuc = 'n'
+            cod = 'c' if cv[1] == 'C' else '?'
 
     # scenario with two elements only, means that the first element should be a
     # consonant
