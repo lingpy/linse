@@ -7,7 +7,7 @@ from clldutils.misc import lazyproperty
 __all__ = ['VOWELS', 'TONES', 'DIACRITICS', 'SEMI_DIACRITICS', 'STRESS', 'MODELS', 'Model', 'DVTS']
 
 STRESS = "ˈˌ'"
-SEMI_DIACRITICS = 'hsʃ̢ɕʂʐʑʒw'
+SEMI_DIACRITICS = 'hszʃ̢ʒɕʑʂʐw'
 
 
 class DataDir:

@@ -31,7 +31,8 @@ def _iter_syllables(
         if pro in vowels:
             vowel_count += 1
         if fpro not in tones:
-            if (ppro >= pro < fpro and vowel_count) or ppro in tones:
+            if (ppro >= pro < fpro and vowel_count and 7 in prosodies[i:]) or\
+                    ppro in tones:
                 yield syllable
                 syllable, vowel_count = [], 0
             elif vowel_count > max_vowels and pro in vowels:
