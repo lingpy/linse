@@ -563,6 +563,7 @@ def seallable(
             ini = 'i' if cv[0] == 'C' else '?'
             nuc = 'n'
         elif cv[0] == 'V':
+            ini = False
             nuc = 'n'
             cod = 'c' if cv[1] == 'C' else '?'
 
