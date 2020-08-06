@@ -85,3 +85,25 @@ def test_morphemes(seq, kw, res):
 def test_flatten(seq, kw, res):
     assert flatten(seq, **kw) == res
 
+
+@pytest.mark.parametrize(
+        'forms,kw,res',
+        [
+            (
+                [
+                    {
+                        'Segments': ['t', 'a', 't', 'a'], 
+                        'Language_ID': 'Language',
+                        'ID': '1'
+                        },
+                    ],
+                 {
+                     'format': 'CcV'
+                     },
+                 1
+                ),
+            ]
+        )
+def test_syllable_inventories(forms, kw, res):
+    assert len(syllable_inventories(forms,
+        **kw)[forms[0]['Language_ID']][forms[0]['Segments'][0]]) == res

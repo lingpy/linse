@@ -4,9 +4,11 @@ Transformations convert a sequence of tokens to new data structure.
 from linse.models import STRESS, DIACRITICS
 
 from linse.typedsequence import ints
-from linse.annotate import soundclass
+from linse.annotate import soundclass, prosody
 
-__all__ = ['syllables', 'morphemes', 'flatten']
+from collections import defaultdict
+
+__all__ = ['syllables', 'morphemes', 'flatten', 'syllable_inventories']
 
 
 def _iter_syllables(
@@ -147,3 +149,28 @@ def flatten(list_of_morphemes, separator='+'):
             out.append(separator)
     out.extend(true_morphemes[-1])
     return out
+
+
+def syllable_inventories(
+        forms,
+        segments='Segments',
+        doculect='Language_ID',
+        ID='ID',
+        format='CcV',
+        **kw):
+    """
+    Retrieve inventory with syllable from a bunch of segments.
+    """
+    D = {}
+    for form in forms:
+        if form[doculect] not in D:
+            D[form[doculect]] = defaultdict(lambda : defaultdict(list))
+        for morpheme in morphemes(form[segments]):
+            for syl in syllables(morpheme):
+                cv = prosody(syl, format=format)
+                template = ''.join(cv)
+                for i, (s, c) in enumerate(zip(syl, cv)):
+                    tpl = template[:i]+'**'+template[i]+'**'+template[i+1:]
+                    D[form[doculect]][s][tpl] += [form[ID]]
+    return D
+
