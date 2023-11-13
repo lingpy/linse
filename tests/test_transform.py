@@ -1,6 +1,10 @@
 import pytest
 
 from linse.transform import *
+from linse.transform import retrieve_converter
+from linse.transform import _unorm
+from csvw.dsv import UnicodeDictReader, UnicodeWriter
+from pathlib import Path
 
 
 @pytest.mark.parametrize(
@@ -23,6 +27,7 @@ from linse.transform import *
          [['-', 'a'], ['b', 'u'], ['-', 'k', 'o']]),
         ('m a ⁵ i o', {'max_vowels': 3}, [['m', 'a', '⁵'], ['i', 'o']]),
         ('m a n t a', {}, ['m a n'.split(), 't a'.split()]),
+        ("m a u a t o", {}, ["m a u".split(), ["a"], "t o".split()]),
         ('h e r b s t g e w i t t e r',
          {},
          [['h', 'e', 'r'], ['b', 's', 't', 'g', 'e'], ['w', 'i', 't'], ['t', 'e', 'r']])
@@ -107,3 +112,73 @@ def test_flatten(seq, kw, res):
 def test_syllable_inventories(forms, kw, res):
     assert len(syllable_inventories(forms,
         **kw)[forms[0]['Language_ID']][forms[0]['Segments'][0]]) == res
+
+
+
+def test__unorm():
+
+    assert len(_unorm("NFD", "á")) == 2
+    assert len(_unorm("NFC", "á")) == 1
+    assert _unorm("NFD", 1) == 1
+    assert _unorm("NFC", None) is None
+
+
+
+def test_segment():
+
+    assert segment("matam", {"m", "at", "a", "m"}) == [
+            "m", "at", "a", "m"]
+    assert segment("", {"a"}) == [""]
+    assert segment("m", {}) == ["m"]
+
+
+def test_convert():
+    prf = {
+            "am": {"grouped": "a.m", "ungrouped": "a m"},
+            "t": {"grouped": "t", "ungrouped": "t"}
+            }
+    assert convert(segment("tam", prf), prf, "grouped") == ["t", "a.m"]
+    assert convert(segment("tam", prf), prf, "ungrouped") == ["t", "a m"]
+    assert convert(segment("tak", prf), prf, "grouped") == ["t", "«a»", "«k»"]
+
+
+def test_SegmentGrouper():
+    
+    with UnicodeDictReader(Path(__file__).parent / "data" / "data.tsv", delimiter="\t") as reader:
+        data = [row for row in reader]
+
+    prf = SegmentGrouper(data, normalization="NFC", missing="?")
+    assert prf("tam", "IPA") == ["t", "ã"]
+    prf2 = SegmentGrouper.from_file(Path(__file__).parent / "data" / "data.tsv",
+                                  delimiter="\t", missing="?")
+    assert prf("tum") == ["t", "?", "?"]
+
+    prf3 = SegmentGrouper.from_table([["Graphemes", "IPA"]] + [[row["Sequence"], row["IPA"]] for row in
+                                    data],
+                                   grapheme_column="Graphemes")
+    assert prf3("amim") == ["am", "«i»", "«m»"]
+
+    assert prf3.to_table()[0][0] == "Graphemes"
+
+    my_list = [["a", "b"], ["aa", "bb"], ["cc", "cc"]]
+    op1 = SegmentGrouper.from_table(my_list, grapheme_column="a")
+    op2 = SegmentGrouper.from_table(op1.to_table(),
+                                 grapheme_column=op1.grapheme)
+    assert op1.to_table()[-1][0] == "cc"
+    
+    op2.write(Path(__file__).parent / "data" / "test.csv", delimiter=",")
+    op3 = SegmentGrouper.from_file(
+            Path(__file__).parent / "data" / "test.csv", delimiter=",", 
+            grapheme_column="a")
+    assert len(op3.converter) == 2
+    assert op3["aa"]["b"] == "bb"
+
+    op4 = SegmentGrouper.from_words(["mat the ma"], mapping=lambda x: x.split())
+    op5 = SegmentGrouper.from_words(["mat the ma".split()])
+    assert op4("mat") == op5("mat")
+
+    assert pytest.raises(ValueError, op5, "mat", column="IPPA")
+
+def test_retrieve_converter():
+    assert "th" in retrieve_converter(["m a th e m a t i cs"], mapping=lambda x: x.split())
+
