@@ -9,7 +9,11 @@ def pytest_generate_tests(metafunc):
     if metafunc.function.__name__ == 'test_ipa':
         vals = [
             ('t͡sɔyɡə', {}, ['t͡s', 'ɔy', 'ɡ', 'ə']),
+            ('a.ut', {}, ["a", "u", "t"]),
+            ("\u0361tsa", {}, ["\u0361t", "s", "a"]),
+            ("ã", {"expand_nasals": True}, ["ã", "∼"]),
             ('t͡sɔyɡə', {'merge_vowels': False}, ['t͡s', 'ɔ', 'y', 'ɡ', 'ə']),
+            ("t\u0361sa\u0303an", {"expand_nasals": True}, ['t͡s', 'ãa', '∼', 'n']),
             ('ˈtʲʰoɔːix_tərp͡f¹¹', {}, ['ˈtʲʰ', 'oɔːi', 'x', '_', 't', 'ə', 'r', 'p͡f', '¹¹']),
             ('ʰto͡i', {}, ['ʰt', 'o͡i']),
         ]
@@ -33,6 +37,8 @@ def test_ipa(text, kw, seq):
     'text,seq',
     [
         ('', []),
+        ("tj~ut", ["tj~", "u", "t"]),
+        ("kwh$ark", ["kwh$", "a", "r", "k"]),
     ]
 )
 def test_asjp(text, seq):

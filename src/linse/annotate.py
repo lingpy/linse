@@ -5,8 +5,9 @@ from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
 from linse.util import get_CLTS, get_NORMALIZE
 
-__all__ = ['soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
-        'codepoints', 'normalize', 'clts', 'bipa', 'CLTS', 'NORM', 'seallable']
+__all__ = [
+    'soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
+    'codepoints', 'normalize', 'clts', 'bipa', 'CLTS', 'NORM', 'seallable']
 
 REPLACEMENT = '\ufffd'
 CLTS = get_CLTS()
@@ -206,7 +207,6 @@ PROSODY_FORMATS = {
 }
 
 
-
 def _process_prosody(sonority):
     """
     Low-level processing of prosodic strings.
@@ -269,8 +269,11 @@ def _process_prosody(sonority):
     return psequence
 
 
-def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS,
-        cldf=True):
+def prosody(sequence,
+            format=True,
+            stress=STRESS,
+            diacritics=DIACRITICS,
+            cldf=True):
     """
     Create a prosodic string of the sonority profile of a sequence.
 
@@ -356,8 +359,11 @@ def prosody(sequence, format=True, stress=STRESS, diacritics=DIACRITICS,
     return [conv.get(x, x) for x in psequence]
 
 
-def prosodic_weight(sequence, _transform=None, stress=STRESS,
-        diacritics=DIACRITICS, cldf=True):
+def prosodic_weight(sequence,
+                    _transform=None,
+                    stress=STRESS,
+                    diacritics=DIACRITICS,
+                    cldf=True):
     """
     Calculate prosodic weights for each position of a sequence.
 
@@ -395,8 +401,7 @@ def prosodic_weight(sequence, _transform=None, stress=STRESS,
     prosodic_string
 
     """
-    psequence = prosody(sequence, stress=stress, diacritics=diacritics,
-            cldf=cldf)
+    psequence = prosody(sequence, stress=stress, diacritics=diacritics, cldf=cldf)
 
     # check for transformer
     if _transform:
@@ -474,13 +479,7 @@ def normalize(sequence):
 
 
 def _token2clts(segment):
-    return CLTS.get(
-            _norm(segment),
-            CLTS.get(
-                _norm(segment[0]) if segment else '?',
-                ['?', '?']
-                )
-            )
+    return CLTS.get(_norm(segment), CLTS.get(_norm(segment[0]) if segment else '?', ['?', '?']))
 
 
 def bipa(sequence):
@@ -490,7 +489,7 @@ def bipa(sequence):
     Notes
     -----
     The mapping is not guaranteed to work as well as the more elaborate mapping
-    with `pyclts`. 
+    with `pyclts`.
     """
     return [_token2clts(segment)[0] for segment in sequence]
 
@@ -502,23 +501,21 @@ def clts(sequence):
     Notes
     -----
     The mapping is not guaranteed to work as well as the more elaborate mapping
-    with `pyclts`. 
+    with `pyclts`.
     """
     return [_token2clts(segment)[1] for segment in sequence]
 
 
-def seallable(
-        sequence,
-        medials={
-            'j', 'w', 'jw', 'wj', 'i̯', 'u̯', 'i̯u̯', 'u̯i̯', 'iu', 'ui', 'y', 'ɥ', 'l',
-            'lj', 'lʲ', 'r', 'rj', 'rʲ', 'ʐ', 'ʑ', 'ʂ', 'ʂ'},
-        vowels=VOWELS,
-        tones=TONES,
-        diacritics=DIACRITICS,
-        stress=STRESS,
-        cldf=True,
-        unknown=REPLACEMENT,
-        ):
+def seallable(sequence,
+              medials={
+                  'j', 'w', 'jw', 'wj', 'i̯', 'u̯', 'i̯u̯', 'u̯i̯', 'iu', 'ui', 'y', 'ɥ', 'l',
+                  'lj', 'lʲ', 'r', 'rj', 'rʲ', 'ʐ', 'ʑ', 'ʂ', 'ʂ'},
+              vowels=VOWELS,
+              tones=TONES,
+              diacritics=DIACRITICS,
+              stress=STRESS,
+              cldf=True,
+              unknown=REPLACEMENT):
     """
     Check if a syllable conforms to the basic SEA syllable.
     """
@@ -544,7 +541,7 @@ def seallable(
         med = 'm' if sequence[1] in medials else '?'
         cod = 'c' if cv[3] == 'C' else '?'
         nuc = 'n' if cv[2] == 'V' else '?'
-    
+
     # scenario the sequence has four slots filled, one must be missing, either
     # coda or medial
     elif len(sequence) == 4:
@@ -555,7 +552,7 @@ def seallable(
         else:
             nuc = 'n' if cv[2] == 'V' else '?'
 
-    # scenario where the sequence has three slots filled, 
+    # scenario where the sequence has three slots filled,
     # case 1 : "ma¹³". The second token must be a vowel
     # case 2 : "am¹³". The first token must be a vowel
     elif len(sequence) == 3:
@@ -578,4 +575,3 @@ def seallable(
         nuc = 'n' if cv[0] == 'V' else '?'
 
     return [s for s in [ini, med, nuc, cod, ton] if s]
-

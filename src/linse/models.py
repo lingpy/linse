@@ -1,8 +1,7 @@
 import re
 import pathlib
+import functools
 import unicodedata
-
-from clldutils.misc import lazyproperty
 
 __all__ = ['VOWELS', 'TONES', 'DIACRITICS', 'SEMI_DIACRITICS', 'STRESS', 'MODELS', 'Model', 'DVTS']
 
@@ -26,15 +25,15 @@ class DVT(DataDir):
             line = unicodedata.normalize('NFC', line.strip())
             yield line.replace('-', '') if strip_dash else line
 
-    @lazyproperty
+    @functools.cached_property
     def diacritics(self):
         return set(self._iter_chars('diacritics', strip_dash=True))
 
-    @lazyproperty
+    @functools.cached_property
     def vowels(self):
         return set(self._iter_chars('vowels')) - self.diacritics
 
-    @lazyproperty
+    @functools.cached_property
     def tones(self):
         return set(self._iter_chars('tones'))
 
@@ -125,7 +124,7 @@ class Model(DataDir):
     Compiler: Johann-Mattis List
     Date:     2012-03
     """
-    @lazyproperty
+    @functools.cached_property
     def info(self):
         res = {}
         fname = self.dir / 'INFO'
@@ -138,15 +137,15 @@ class Model(DataDir):
                     break
         return res
 
-    @lazyproperty
+    @functools.cached_property
     def vowels(self):
         return self.info.get('vowels')
 
-    @lazyproperty
+    @functools.cached_property
     def tones(self):
         return self.info.get('tones')
 
-    @lazyproperty
+    @functools.cached_property
     def converter(self):
         """
         Function imports individually defined sound classes from a text file and

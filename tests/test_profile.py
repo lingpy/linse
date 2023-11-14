@@ -1,8 +1,9 @@
+from pathlib import Path
+
 import pytest
 
 from linse.profile import Form, DraftProfile 
-from clldutils.path import TemporaryDirectory
-from pathlib import Path
+
 
 @pytest.mark.parametrize(
     'seqs,kw,res,errs',
@@ -96,7 +97,7 @@ def test_get_profile(seqs, kw, res, errs):
         assert len(v) == errs[k, error]
         
     
-def test_DraftProfile():
+def test_DraftProfile(tmp_path):
     path = Path(__file__).parent.joinpath('data', 'forms.csv').as_posix()
     profile1 = DraftProfile.from_cldf(path, following='^', preceding='$')
     profile2 = DraftProfile.from_cldf(path, language='Luobenzhuo')
@@ -106,13 +107,10 @@ def test_DraftProfile():
     assert profile3.get_exceptions()[1][0] == 'f e h l e r'
 
     assert len(profile2.graphemes) == 36
-    with TemporaryDirectory('./') as tmp:
-        profile1.write_profile(Path(tmp).joinpath('orthography.tsv'), 
-                'Grapheme', 'IPA', 'Frequency')
-        profile3.write_exceptions(Path(tmp).joinpath('lexemes.tsv'))
-    table = profile2.get_profile(
+    profile1.write_profile(tmp_path.joinpath('orthography.tsv'), 'Grapheme', 'IPA', 'Frequency')
+    profile3.write_exceptions(tmp_path.joinpath('lexemes.tsv'))
+    profile2.get_profile(
             'Grapheme', 'CLTS', 'SCA', 'IPA', 'Unicode', 'Examples',
             'Frequency', 'Languages')
     with pytest.raises(ValueError):
         DraftProfile('muti').get_profile('This')
-

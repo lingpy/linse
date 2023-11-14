@@ -7,8 +7,7 @@ Kleiweg <http://www.let.rug.nl/~kleiweg/L04/devel/python/xsampa.html>.
 """
 import re
 import pathlib
-
-from clldutils.misc import lazyproperty
+import functools
 
 __all__ = ['SAMPA']
 
@@ -22,14 +21,14 @@ class Sampa(dict):
             if line and not line.startswith('#'):
                 key, val = line.split('\t', maxsplit=1)
                 if key in self and self[key] != val:
-                    raise ValueError("Keys encode too many values.")
+                    raise ValueError("Keys encode too many values.")  # pragma: no cover
                 self[key] = val
 
         for k in self:
             self[k] = eval('"""' + self[k] + '"""')
         self[' '] = ' '
 
-    @lazyproperty
+    @functools.cached_property
     def segent_pattern(self):
         segs = '|'.join(re.escape(s) for s in sorted(self.keys(), key=lambda k: -len(k)))
         return re.compile('(' + segs + ')|(.)')

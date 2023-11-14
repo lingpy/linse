@@ -1,5 +1,5 @@
-import pytest
 from linse.util import *
+
 
 def test_data_path():
     assert data_path('nothing').stem == 'nothing'

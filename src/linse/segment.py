@@ -124,8 +124,8 @@ def ipa(istring,
             # to a null phoneme glyph.
             if not out:
                 # empty list, i.e., no previous entry
-                out = ['\u2205' + char]
-                merge = False
+                out = [char]
+                merge = True
             else:
                 out[-1] += char
                 merge = True
