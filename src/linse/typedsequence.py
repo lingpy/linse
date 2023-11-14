@@ -1,7 +1,7 @@
 import functools
 import itertools
 
-__all__ = ['TypedSequence', 'words', 'ints', 'floats']
+__all__ = ['TypedSequence', 'morph', 'word', 'ints', 'floats']
 
 
 class TypedSequence(list):
@@ -50,7 +50,7 @@ class TypedSequence(list):
         list.__setitem__(self, index, self.__class__.read(item, self._type, self._strict))
 
 
-class words(TypedSequence):  # noqa: N801
+class morph(TypedSequence):  # noqa: N801
     def __init__(self, iterable, strict=False):
         TypedSequence.__init__(self, str, iterable, strict=strict)
 
@@ -60,6 +60,25 @@ class words(TypedSequence):  # noqa: N801
         if len(item.split()) > 1:
             raise ValueError(item)
         return item
+
+class word(morph):
+
+    def __init__(self, iterable, sep=" + "):
+        morph.__init__(self, iterable, strict=False)
+        self.morphs = [morph(x) for x in (' '.join(iterable).split(sep) if not
+            isinstance(iterable, str) else iterable.split(sep))]
+        self.sep = sep
+
+    def __add__(self, other):
+        return word(str(self) + self.sep + str(other))
+
+    def extend(self, other):
+        super(word, self).extend(word('') + morph(other))
+
+    def replace(self, i, item):
+        self.morphs[i] = morph(item)
+        new_word = self.sep.join([str(x) for x in self.morphs])
+        self.__init__(new_word, sep=self.sep)
 
 
 ints = functools.partial(TypedSequence, int)
