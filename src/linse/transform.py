@@ -1,15 +1,14 @@
 """
 Transformations convert a sequence of tokens to new data structure.
 """
-from linse.models import STRESS, DIACRITICS
-
-from linse.typedsequence import ints
-from linse.annotate import soundclass, prosody
-
+import typing
 import unicodedata
 from collections import defaultdict
 
-from csvw.dsv import UnicodeDictReader, UnicodeWriter
+from linse.models import STRESS, DIACRITICS
+from linse.typedsequence import ints
+from linse.annotate import soundclass, prosody
+from linse.util import iter_dicts_from_csv, write_csv
 
 
 __all__ = ['syllables', 'morphemes', 'flatten', 'syllable_inventories',
@@ -198,7 +197,7 @@ def _unorm(normalization, string):
     return string
 
 
-def segment(word, segments):
+def segment(word: str, segments: typing.Container) -> typing.List[str]:
     """
     Use
     """
@@ -220,7 +219,10 @@ def segment(word, segments):
             queue += [[segmented + [current], rest, ""]]
 
 
-def convert(segments, converter, column, missing="«{0}»"):
+def convert(segments: typing.Iterable[str],
+            converter,
+            column,
+            missing="«{0}»") -> typing.List[str]:
     return [
         converter.get(s, {column: missing.format(s)}).get(
             column, missing.format("column--{0}-not-found".format(column))
@@ -230,8 +232,12 @@ def convert(segments, converter, column, missing="«{0}»"):
 
 
 def retrieve_converter(
-    words, mapping=None, grapheme_column="Sequence", frequency_column="Frequency"
-):
+        words: typing.Iterable[typing.Iterable[str]],
+        mapping: typing.Optional[
+            typing.Callable[[typing.Iterable[str]], typing.Iterable[str]]] = None,
+        grapheme_column="Sequence",
+        frequency_column="Frequency",
+) -> typing.Dict[str, typing.Dict[str, typing.Union[str, int]]]:
     """
     Retrieve a conversion table for segmented words.
 
@@ -256,13 +262,12 @@ class SegmentGrouper:
     """
     def __init__(
         self,
-        converter,
-        normalization="NFD",
-        missing="«{0}»",
-        null="NULL",
-        grapheme_column="Sequence",
+        converter: typing.Sequence[typing.Dict[str, str]],
+        normalization: str = "NFD",
+        missing: str = "«{0}»",
+        null: str = "NULL",
+        grapheme_column: str = "Sequence",
     ):
-
         self.converter = {}
         self.columns = [grapheme_column] + [
             c for c in sorted(converter[0].keys()) if c != grapheme_column
@@ -277,6 +282,9 @@ class SegmentGrouper:
         self.grapheme = grapheme_column
 
     def __getitem__(self, idx):
+        """
+        Access rows of the conversion table by (normalized) grapheme.
+        """
         return self.converter[idx]
 
     def __call__(self, sequence, column=None):
@@ -304,12 +312,8 @@ class SegmentGrouper:
         null="NULL",
         grapheme_column="Sequence",
     ):
-        data = []
-        with UnicodeDictReader(file, delimiter=delimiter) as reader:
-            for row in reader:
-                data += [row]
         return cls(
-            data,
+            list(iter_dicts_from_csv(file, delimiter=delimiter)),
             normalization=normalization,
             missing=missing,
             null=null,
@@ -321,17 +325,12 @@ class SegmentGrouper:
         cls,
         table,
         normalization="NFD",
-        delimiter="\t",
         missing="«{0}»",
         null="NULL",
         grapheme_column="Sequence",
     ):
-        header = table[0]
-        data = []
-        for row in table[1:]:
-            data += [dict(zip(header, row))]
         return cls(
-            data,
+            [dict(zip(table[0], row)) for row in table[1:]],
             normalization=normalization,
             missing=missing,
             null=null,
@@ -363,5 +362,4 @@ class SegmentGrouper:
         return table
 
     def write(self, path, delimiter="\t"):
-        with UnicodeWriter(path, delimiter=delimiter) as writer:
-            writer.writerows(self.to_table())
+        write_csv(path, self.to_table(), delimiter=delimiter)

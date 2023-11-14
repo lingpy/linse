@@ -1,8 +1,8 @@
 from collections import defaultdict
+
 from linse.segment import ipa
 from linse.annotate import _token2soundclass, _token2clts, _codepoint
-from csvw.dsv import UnicodeDictReader
-import codecs
+from linse.util import iter_dicts_from_csv, write_csv
 
 
 class Form(object):
@@ -64,16 +64,16 @@ class DraftProfile(object):
             segmenter=segmenter,
             **kw
         )
-        with UnicodeDictReader(filename, delimiter=',') as reader:
-            for row in reader:
-                if not language or row['Language_ID'] == language:
-                    profile.add_forms(Form(row[text], **row))
+        for row in iter_dicts_from_csv(filename):
+            if not language or row['Language_ID'] == language:
+                profile.add_forms(Form(row[text], **row))
         return profile
 
     def add_forms(self, *forms):
         """
         Add new forms to the profile.
         """
+        i = -1
         for i, form in enumerate(forms):
             meta = form.kw if hasattr(form, 'kw') else {'ID': i + self.counter, 'text': form}
             try:
@@ -109,8 +109,7 @@ class DraftProfile(object):
         def identity(x):
             return x
 
-        if not key:
-            key = identity
+        key = key or identity
         # not all columns are allowed
         transform = transform or {}
         modify = {
@@ -132,15 +131,10 @@ class DraftProfile(object):
         if [c for c in columns if c not in modify]:
             raise ValueError('selected columns which are not available')
 
-        table = [[c for c in columns]]
+        table = []
         for char, meta in self.graphemes.items():
-            row = []
-            for col in columns:
-                row += [modify[col](char, meta)]
-            table += [row]
-        table = sorted(table, key=key)
-        table = [columns] + table
-        return table
+            table.append([modify[col](char, meta) for col in columns])
+        return [columns] + sorted(table, key=key)
 
     def write_profile(self, filename, *columns, transform=None, key=None):
         """
@@ -161,9 +155,7 @@ class DraftProfile(object):
         """
         columns = columns or ['Grapheme']
         table = self.get_profile(*columns, transform=transform, key=key)
-        with codecs.open(filename, 'w', 'utf-8') as f:
-            for row in table:
-                f.write('\t'.join([str(x) for x in row]) + '\n')
+        write_csv(filename, [[str(x) for x in row] for row in table], delimiter='\t')
 
     def get_exceptions(self):
         """
@@ -171,13 +163,8 @@ class DraftProfile(object):
         """
         table = [['Lexeme', 'Replacement', 'Comment']]
         for (form, exception), metas in self.exceptions.items():
-            table.append([
-                form,
-                '?',
-                exception + ' ({0} cases)'.format(len(metas))])
+            table.append([form, '?', exception + ' ({0} cases)'.format(len(metas))])
         return table
 
     def write_exceptions(self, filename):
-        with codecs.open(filename, 'w', 'utf-8') as f:
-            for row in self.get_exceptions():
-                f.write('\t'.join(row) + '\n')
+        write_csv(filename, self.get_exceptions(), delimiter='\t')

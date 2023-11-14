@@ -71,7 +71,7 @@ def test__token2soundclass():
 
 
 
-def test_soundclass():
+def test_soundclass_err():
     with pytest.raises(ValueError):
         soundclass('bla', 'sca')
     with pytest.raises(ValueError):
