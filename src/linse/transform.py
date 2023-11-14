@@ -48,7 +48,7 @@ def _iter_syllables(
             elif ppro in vowels and pro not in vowels and fpro > pro:
                 yield syllable
                 syllable, vowel_count = [], 0
-                
+
         syllable.append(char)
     if syllable:
         yield syllable
@@ -173,13 +173,13 @@ def syllable_inventories(
     D = {}
     for form in forms:
         if form[doculect] not in D:
-            D[form[doculect]] = defaultdict(lambda : defaultdict(list))
+            D[form[doculect]] = defaultdict(lambda: defaultdict(list))
         for morpheme in morphemes(form[segments]):
             for syl in syllables(morpheme):
                 cv = prosody(syl, format=format)
                 template = ''.join(cv)
                 for i, (s, c) in enumerate(zip(syl, cv)):
-                    tpl = template[:i]+'**'+template[i]+'**'+template[i+1:]
+                    tpl = template[:i] + '**' + template[i] + '**' + template[i + 1:]
                     D[form[doculect]][s][tpl] += [form[ID]]
     return D
 
@@ -200,7 +200,7 @@ def _unorm(normalization, string):
 
 def segment(word, segments):
     """
-    Use 
+    Use
     """
     if len(word) == 0:
         return [word]
@@ -209,12 +209,12 @@ def segment(word, segments):
         segmented, current, rest = queue.pop(0)
         if current in segments and not rest:
             return segmented + [current]
-        elif len(current) == 1 and not current in segments:
+        elif len(current) == 1 and current not in segments:
             if rest:
                 queue += [[segmented + [current], rest, ""]]
             else:
                 return segmented + [current]
-        elif not current in segments:
+        elif current not in segments:
             queue += [[segmented, current[: len(current) - 1], current[-1] + rest]]
         else:
             queue += [[segmented + [current], rest, ""]]
