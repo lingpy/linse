@@ -61,12 +61,16 @@ class morph(TypedSequence):  # noqa: N801
             raise ValueError(item)
         return item
 
+
 class word(morph):
 
     def __init__(self, iterable, sep=" + "):
         morph.__init__(self, iterable, strict=False)
-        self.morphs = [morph(x) for x in (' '.join(iterable).split(sep) if not
-            isinstance(iterable, str) else iterable.split(sep))]
+        self.morphs = [
+            morph(x) for x in (
+                ' '.join(iterable).split(sep)
+                if not isinstance(iterable, str)
+                else iterable.split(sep))]
         self.sep = sep
 
     def __add__(self, other):

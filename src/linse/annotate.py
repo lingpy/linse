@@ -232,7 +232,7 @@ def _process_prosody(sonority):
                 psequence.append('Y')
         elif b == 8:  # a tone
             psequence.append('T')
-        elif c == 8: # sound before tone, not a vowel
+        elif c == 8:  # sound before tone, not a vowel
             psequence.append("L")
         elif a >= b >= c:  # descending
             if first:
