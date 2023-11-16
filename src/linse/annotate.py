@@ -232,15 +232,14 @@ def _process_prosody(sonority):
                 psequence.append('Y')
         elif b == 8:  # a tone
             psequence.append('T')
-        elif a >= b >= c or c == 8:  # descending
-            if c == 9:  # word final position
-                psequence.append('Z' if b == 7 else 'N')  # vowel or consonant
+        elif c == 8:  # sound before tone, not a vowel
+            psequence.append("L")
+        elif a >= b >= c:  # descending
+            if first:
+                first = False
+                psequence.append('A')
             else:
-                if first:
-                    first = False
-                    psequence.append('A')
-                else:
-                    psequence.append('L')
+                psequence.append('L')
         elif b < c or a > b <= c or a < b <= c:  # ascending
             # check for syllable first
             if a == 9:
@@ -261,11 +260,6 @@ def _process_prosody(sonority):
                 first = False
             else:
                 psequence.append('Y')
-        else:
-            raise ValueError(
-                "Conversion to prosodic string failed due to a condition which was not "
-                "defined in the convertion, for details compare the numerical string "
-                "{0} with the profile string {1}".format(sonority, psequence))
     return psequence
 
 

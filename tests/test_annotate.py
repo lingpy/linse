@@ -25,7 +25,14 @@ def test_soundclass(seq, model, res):
         ('', ''),
         ('tʰ ɔ x t ə r', 'AXMBYN'),
         ('th o x ¹ t e', 'AXLTBZ'),
-        ('', ''),
+        ('b a ⁵', 'AXT'),
+        ('m a t a o', 'AXBYZ'),
+        ('a u t', 'XYN'),
+        ('m s s', 'ALN'),
+        ('m k a', 'ACZ'),
+        ('k m n a', 'ACBX'),
+        ('p n p', 'AXN'),
+        ('p a k n k a', 'AXBYBZ'),
     ]
 )
 def test_prosody(seq, res):
@@ -36,6 +43,8 @@ def test_prosodic_weights():
     seq = 'tʰ ɔ x t ə r'.split(' ')
     assert prosodic_weight(seq)[0] == 2
     assert prosodic_weight(seq)[-1] == 0.8
+    assert prosodic_weight("b a ⁵".split(), _transform={"A": 0, "X": 1, "T": 2})[0] == 0
+    assert prosodic_weight("b a ⁵".split())[0] == 1.6
 
 
 def test_codepoints():
@@ -94,6 +103,7 @@ def test_soundclass_err():
         (['a', 'ŋ', '⁵'], ['n', 'c', 't']),
         (['m', 'a', '⁴'], ['i', 'n', 't']),
         (['m', 'j', 'a', '⁵'], ['i', 'm', 'n', 't']),
+        (['m', 'n', 'a', 'u'], ['i', 'm', 'n', '?']),
         (['m', 'j', 't', '⁴'], ['i', 'm', '?', 't']),
     ]
 )

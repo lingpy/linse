@@ -156,15 +156,14 @@ class Model(DataDir):
             key, v = unicodedata.normalize('NFC', line.strip()).split(' : ')
             for value in v.split(','):
                 value = value.strip()
-                if value in sc_repl_dict and sc_repl_dict[value] != key:
+                if value in sc_repl_dict and sc_repl_dict[value] != key:  # pragma: no cover
                     raise ValueError("Values {0} in file {1} are multiply defined!".format(
                         value, self.dir / 'converter'))
                 sc_repl_dict[value] = key
         return sc_repl_dict
 
     def __str__(self):
-        out = 'Model:    {0}\nInfo:     {1}\nSource:   {2}\nCompiler: {3}\nDate:     {4}'
-        return out.format(
+        return 'Model:    {0}\nInfo:     {1}\nSource:   {2}\nCompiler: {3}\nDate:     {4}'.format(
             self.name,
             self.info['description'],
             self.info['source'],

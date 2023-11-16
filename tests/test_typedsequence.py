@@ -47,19 +47,19 @@ def test_floats():
 
 def test_string():
     string1 = '1 2 3 + 1 2 3'
-    s = words(string1)
+    s = Morpheme(string1)
     assert str(s) == string1
 
 
 def test_misc():
     # check for types
-    s = words('1 2 3')
+    s = Morpheme('1 2 3')
     assert str(s + s) == '1 2 3 1 2 3'
     i = ints('1 2 3')
     assert str(i + [1, 2, 3]) == '1 2 3 1 2 3'
 
     # append
-    app = words('1 2 3')
+    app = Morpheme('1 2 3')
     app.append('4')
     assert str(app) == '1 2 3 4'
 
@@ -68,8 +68,18 @@ def test_misc():
     assert str(app) == '1 2 3 4 5'
 
     with pytest.raises(ValueError):
-        words('1 2').append('2 3')
+        Morpheme('1 2').append('2 3')
 
-    app = words('1 2 3')
+    app = Morpheme('1 2 3')
     app[1] = 2
     assert app[1] == '2'
+
+    s = Word("a b c + d e f")
+    assert str(s.morphemes[0]) == "a b c"
+
+    assert str(s + s) == str(s) + " + " + str(s)
+    with pytest.raises(ValueError):
+        s.append(str(s))
+    s.extend(str(s))
+    s.replace(0, "b c d")
+    assert str(s.morphemes[0]) == "b c d"
