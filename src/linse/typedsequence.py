@@ -43,8 +43,8 @@ class TypedSequence(list):
     def __hash__(self):
         return hash(str(self))
 
-    def __eq__(self):
-        return str(self) == other(self)
+    def __eq__(self, other):
+        return str(self) == str(other)
 
     def __add__(self, other):
         return TypedSequence(self._type, itertools.chain(self, other), strict=self._strict)
