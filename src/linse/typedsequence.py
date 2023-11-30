@@ -37,6 +37,15 @@ class TypedSequence(list):
     def __str__(self):
         return ' '.join([self.__class__.write(x) for x in self])
 
+    def __repr__(self):
+        return repr(str(self))
+
+    def __hash__(self):
+        return hash(str(self))
+
+    def __eq__(self):
+        return str(self) == other(self)
+
     def __add__(self, other):
         return TypedSequence(self._type, itertools.chain(self, other), strict=self._strict)
 
