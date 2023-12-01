@@ -92,7 +92,7 @@ def test_misc():
     word_in_dict = {word: word.morphemes}
 
     # make sure we can access word by its str() attribute
-    assert word_in_dict["a + b + c"] == word.morphemes
+    assert word_in_dict[Word("a + b + c")] == word.morphemes
 
     # append and extend
     # append adds one item to the list extend adds a new morpheme
