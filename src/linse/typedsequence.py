@@ -37,6 +37,12 @@ class TypedSequence(list):
     def __str__(self):
         return ' '.join([self.__class__.write(x) for x in self])
 
+    def __repr__(self):
+        return repr(str(self))
+
+    def __hash__(self):
+        return hash(str(self))
+
     def __add__(self, other):
         return TypedSequence(self._type, itertools.chain(self, other), strict=self._strict)
 
@@ -76,7 +82,12 @@ class Word(Morpheme):
     def __add__(self, other):
         return Word(str(self) + self.sep + str(other))
 
+    def append(self, other):
+        self.morphemes[-1].append(other)
+        return super(Word, self).append(other)
+
     def extend(self, other):
+        self.morphemes.append(other)
         super(Word, self).extend(Word('') + Morpheme(other))
 
     def replace(self, i, item):

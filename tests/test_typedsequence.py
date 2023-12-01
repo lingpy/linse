@@ -7,10 +7,10 @@ def test_TypedSequence():
     a1 = TypedSequence(int, '1 2 3')
     a2 = [1, 2, 3]
     a3 = [1, 3]
-    assert a1 == a2
+    assert list(a1) == a2
     assert a1 != a3
     del a1[1]
-    assert a1 == a3
+    assert list(a1) == a3
     assert isinstance(a1 + [4, 5], TypedSequence)
     assert not isinstance([4, 5] + a1, TypedSequence)
     assert TypedSequence(int, str(a1)) == a1
@@ -27,6 +27,8 @@ def test_TypedSequence():
 
     with pytest.raises(ValueError):
         a.extend(['a'])
+
+    assert repr(a1) == "'1 3'"
 
 
 def test_ints():
@@ -83,3 +85,25 @@ def test_misc():
     s.extend(str(s))
     s.replace(0, "b c d")
     assert str(s.morphemes[0]) == "b c d"
+
+    word = Word("a + b + c")
+    
+    # make sure word can be hashed
+    word_in_dict = {word: word.morphemes}
+
+    # make sure we can access word by its str() attribute
+    assert word_in_dict[Word("a + b + c")] == word.morphemes
+
+    # append and extend
+    # append adds one item to the list extend adds a new morpheme
+    w1, w2 = Word("a + b"), Word("a + b")
+    w1.append("c")
+    w2.extend("c")
+    assert w1 != w2
+    assert w1.morphemes != w2.morphemes
+    assert str(w1) == "a + b c"
+    assert str(w2) == "a + b + c"
+    
+    
+
+
