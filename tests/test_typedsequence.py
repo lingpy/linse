@@ -104,6 +104,13 @@ def test_misc():
     assert str(w1) == "a + b c"
     assert str(w2) == "a + b + c"
     
+    # append, extend, append
+    w = Word("")
+    w.append("a")
+    w.extend("a")
+    w.append("a")
+    w.extend("a")
+    assert str(w) == "a + a a + a"
     
 
 
