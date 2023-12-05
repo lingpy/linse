@@ -87,7 +87,7 @@ class Word(Morpheme):
         return super(Word, self).append(other)
 
     def extend(self, other):
-        self.morphemes.append(other)
+        self.morphemes.append(Morpheme(other))
         super(Word, self).extend(Word('') + Morpheme(other))
 
     def replace(self, i, item):
