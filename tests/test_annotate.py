@@ -84,18 +84,12 @@ def test__token2soundclass():
     assert linse.annotate._token2soundclass("tt", "dolgo", strict=True) == REPLACEMENT
 
 
-def test_token2clts():
-    assert linse.annotate._token2clts("")[0] == REPLACEMENT
-    assert linse.annotate._token2clts("tt", strict=False)[0] == "t"
-    assert linse.annotate._token2clts("tt", strict=True)[0] == REPLACEMENT
-
-
 
 def test_soundclass_err():
     with pytest.raises(ValueError):
         soundclass('bla', 'sca')
-    with pytest.raises(ValueError):
-        soundclass(['A', 'O'], 'sca')
+    with pytest.warns(UserWarning):
+        soundclass(["0"], "sca")
 
 
 @pytest.mark.parametrize(

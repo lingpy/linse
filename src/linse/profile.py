@@ -1,7 +1,7 @@
 from collections import defaultdict
 
 from linse.segment import ipa
-from linse.annotate import _token2soundclass, _token2clts, _codepoint
+from linse.annotate import _token2soundclass, _codepoint
 from linse.util import iter_dicts_from_csv, write_csv
 
 
@@ -115,8 +115,8 @@ class DraftProfile(object):
         modify = {
             'Grapheme': lambda x, y: x,
             'SCA': lambda x, y: _token2soundclass(x, 'sca'),
-            'IPA': lambda x, y: _token2clts(x)[0],
-            'CLTS': lambda x, y: _token2clts(x)[1],
+            'IPA': lambda x, y: _token2soundclass(x, "bipa"),
+            'CLTS': lambda x, y: _token2soundclass(x, "clts"),
             'Unicode': lambda x, y: ' '.join([_codepoint(c) for c in x]),
             'Examples': lambda x, y: ', '.join(
                 sorted(set([item['text'] for item in y]))[:3]

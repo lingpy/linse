@@ -5,61 +5,30 @@ from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
 from linse.util import get_CLTS, get_NORMALIZE
 from linse.subsequence import substrings 
+from functools import partial
+import warnings
 
 __all__ = [
     'soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
-    'codepoints', 'normalize', 'clts', 'bipa', 'CLTS', 'NORM', 'seallable']
+    'codepoints', 'normalize', 'clts', 'bipa', 'NORM', 'seallable']
 
 REPLACEMENT = '\ufffd'
-CLTS = get_CLTS()
 NORM = get_NORMALIZE()
 
 
-def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS,
-                      cldf=True, strict=False):
+def _token2soundclass(token, model,
+                      slash=True, strict=False):
     """
-    Convert a single token into a sound-class.
-
-    tokens : str
-        A token (phonetic segment).
-
-    model : :py:class:`~lingpy.data.model.Model`
-        A :py:class:`~lingpy.data.model.Model` object.
-
-    stress : str (default=rcParams['stress'])
-        A string containing the stress symbols used in the analysis. Defaults
-        to the stress as defined in ~lingpy.settings.rcParams.
-
-    diacritics : str (default=rcParams['diacritics'])
-        A string containing diacritic symbols used in the analysis. Defaults to
-        the diacritic symbolds defined in ~lingpy.settings.rcParams.
-
-    cldf : bool (default=False)
-        If set to True, this will allow for a specific treatment of phonetic
-        symbols which cannot be completely resolved (e.g., laryngeal h₂ in
-        Indo-European). Following the `CLDF <http://cldf.clld.org>`_
-        specifications (in particular the specifications for writing
-        transcriptions in segmented strings, as employed by the `CLTS
-        <http://calc.digling.org/clts/>`_ initiative), in cases of insecurity
-        of pronunciation, users can adopt a ```source/target``` style, where
-        the source is the symbol used, e.g., in a reconstruction system, and
-        the target is a proposed phonetic interpretation. This practice is also
-        accepted by the `EDICTOR <http://edictor.digling.org>`_ tool.
-
-    Returns
-    -------
-
-    sound_class : str
-        A sound-class representation of the phonetic segment. If the segment
-        cannot be resolved, the respective string will be rendered as "0"
-        (zero).
+    Convert a single token into a sound-class item.
     """
-    if cldf:
+    token = _norm(token)
+    
+    if slash:
         a, sep, b = token.partition('/')
         if sep:
             token = b or '?'
 
-    if not isinstance(model, Model):
+    if not isinstance(model, (Model, dict)):
         model = MODELS[model]
     
     if strict:
@@ -73,42 +42,10 @@ def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS,
     return REPLACEMENT
 
 
-def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS,
-               cldf=True, strict=False):
+def soundclass(tokens, model='dolgo',
+               slash=True, strict=False):
     """
     Convert tokenized IPA strings into their respective class strings.
-
-    Parameters
-    ----------
-
-    tokens : list
-        A list of tokens as they are returned from :py:func:`ipa2tokens`.
-
-    model : :py:class:`~lingpy.data.model.Model`
-        A :py:class:`~lingpy.data.model.Model` object.
-
-    stress : str (default=rcParams['stress'])
-        A string containing the stress symbols used in the analysis. Defaults
-        to the stress as defined in ~lingpy.settings.rcParams.
-
-    diacritics : str (default=rcParams['diacritics'])
-        A string containing diacritic symbols used in the analysis. Defaults to
-        the diacritic symbolds defined in ~lingpy.settings.rcParams.
-
-    cldf : bool (default=True)
-        If set to True, as by default, this will allow for a specific treatment
-        of phonetic
-        symbols which cannot be completely resolved (e.g., laryngeal h₂ in
-        Indo-European). Following the `CLDF <http://cldf.clld.org>`_
-        specifications (in particular the
-        specifications for writing transcriptions in segmented strings, as
-        employed by the `CLTS <http://calc.digling.org/clts/>`_ initiative), in
-        cases of insecurity of pronunciation, users can adopt a
-        ```source/target``` style, where the source is the symbol used, e.g.,
-        in a reconstruction system, and the target is a proposed phonetic
-        interpretation. This practice is also accepted by the `EDICTOR
-        <http://edictor.digling.org>`_ tool.
-
     """
     # raise value error if input is not an iterable (tuple or list)
     if not isinstance(tokens, (tuple, list)):
@@ -116,12 +53,15 @@ def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS,
 
     out = []
     for token in tokens:
-        out.append(_token2soundclass(token, model, stress=stress,
-                                     diacritics=diacritics, cldf=cldf,
+        out.append(_token2soundclass(token, model, slash=slash,
                                      strict=strict))
     if out.count(REPLACEMENT) == len(out):
-        raise ValueError("[!] your sequence contains only unknown characters")
+        warnings.warn("[i] your sequence {0} contains only unknown characters".format(tokens))
     return out
+
+
+clts = partial(soundclass, model="clts")
+bipa = partial(soundclass, model="bipa")
 
 
 PROSODY_FORMATS = {
@@ -223,9 +163,8 @@ def _process_prosody(sonority):
 
 def prosody(sequence,
             format=True,
-            stress=STRESS,
-            diacritics=DIACRITICS,
-            cldf=True, strict=False):
+            slash=True, 
+            strict=False):
     """
     Create a prosodic string of the sonority profile of a sequence.
 
@@ -235,26 +174,6 @@ def prosody(sequence,
     seq : list
         A list of integers indicating the sonority of the tokens of the
         underlying sequence.
-
-    stress : str (default=rcParams['stress'])
-        A string containing the stress symbols used in the analysis. Defaults
-        to the stress as defined in ~lingpy.settings.rcParams.
-
-    diacritics : str (default=rcParams['diacritics'])
-        A string containing diacritic symbols used in the analysis. Defaults to
-        the diacritic symbolds defined in ~lingpy.settings.rcParams.
-
-    cldf : bool (default=False)
-        If set to True, this will allow for a specific treatment of phonetic
-        symbols which cannot be completely resolved (e.g., laryngeal h₂ in
-        Indo-European). Following the `CLDF <http://cldf.clld.org>`_
-        specifications (in particular the specifications for writing
-        transcriptions in segmented strings, as employed by the `CLTS
-        <http://calc.digling.org/clts/>`_ initiative), in cases of insecurity
-        of pronunciation, users can adopt a ```source/target``` style, where
-        the source is the symbol used, e.g., in a reconstruction system, and
-        the target is a proposed phonetic interpretation. This practice is also
-        accepted by the `EDICTOR <http://edictor.digling.org>`_ tool.
 
     Returns
     -------
@@ -302,8 +221,8 @@ def prosody(sequence,
     # get the sonority profile
     sonority = [9] + \
         ints(soundclass(
-            sequence, model='art', stress=stress, diacritics=diacritics,
-            cldf=cldf, strict=strict)) + \
+            sequence, model='art',
+            slash=slash, strict=strict)) + \
         [9]
     psequence = _process_prosody(sonority)
 
@@ -314,9 +233,7 @@ def prosody(sequence,
 
 def prosodic_weight(sequence,
                     _transform=None,
-                    stress=STRESS,
-                    diacritics=DIACRITICS,
-                    cldf=True, strict=False):
+                    slash=True, strict=False):
     """
     Calculate prosodic weights for each position of a sequence.
 
@@ -354,8 +271,8 @@ def prosodic_weight(sequence,
     prosodic_string
 
     """
-    psequence = prosody(sequence, stress=stress, diacritics=diacritics,
-                        cldf=cldf, strict=strict)
+    psequence = prosody(sequence, slash=slash,
+                        strict=strict)
 
     # check for transformer
     if _transform:
@@ -432,40 +349,6 @@ def normalize(sequence):
     return [_norm(s) for s in sequence]
 
 
-def _token2clts(segment, strict=False):
-    if strict:
-        return CLTS[segment] if segment in CLTS else [REPLACEMENT, REPLACEMENT]
-    for s in substrings(_norm(segment)):
-        try:
-            return CLTS[s]
-        except KeyError:
-            pass
-    return [REPLACEMENT, REPLACEMENT]
-
-
-def bipa(sequence, strict=False):
-    """
-    Convert a sequence in supposed IPA to the B(road)IPA of CLTS.
-
-    Notes
-    -----
-    The mapping is not guaranteed to work as well as the more elaborate mapping
-    with `pyclts`.
-    """
-    return [_token2clts(segment, strict=strict)[0] for segment in sequence]
-
-
-def clts(sequence, strict=False):
-    """
-    Convert a sequence in supposed IPA to the CLTS feature names.
-
-    Notes
-    -----
-    The mapping is not guaranteed to work as well as the more elaborate mapping
-    with `pyclts`.
-    """
-    return [_token2clts(segment, strict=strict)[1] for segment in sequence]
-
 
 def seallable(sequence,
               medials={
@@ -473,9 +356,7 @@ def seallable(sequence,
                   'lj', 'lʲ', 'r', 'rj', 'rʲ', 'ʐ', 'ʑ', 'ʂ', 'ʂ'},
               vowels=VOWELS,
               tones=TONES,
-              diacritics=DIACRITICS,
-              stress=STRESS,
-              cldf=True,
+              slash=True,
               unknown=REPLACEMENT):
     """
     Check if a syllable conforms to the basic SEA syllable.
@@ -485,7 +366,7 @@ def seallable(sequence,
     if len(sequence) > 5:
         return len(sequence) * [unknown]
 
-    cv = soundclass(sequence, model='cv', diacritics=diacritics, stress=stress, cldf=cldf)
+    cv = soundclass(sequence, model='cv', slash=slash)
 
     ini, med, nuc, cod, ton = 5 * [False]
 

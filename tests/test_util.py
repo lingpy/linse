@@ -6,9 +6,9 @@ def test_data_path():
 
 
 def test_get_CLTS():
-    clts = get_CLTS()
+    bipa, clts = get_CLTS()
     for a, b in [('a', 'a'), ('th', 'tʰ')]:
-        assert clts[a][0] == b
+        assert bipa[a] == b
 
 
 def test_NORMALIZE():

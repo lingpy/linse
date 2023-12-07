@@ -56,9 +56,7 @@ def _iter_syllables(
 def syllables(sequence,
               model='art',
               gap_symbol="-",
-              stress=STRESS,
-              diacritics=DIACRITICS,
-              cldf=True,
+              slash=True,
               vowels=(7,),
               tones=(8,),
               max_vowels=2):
@@ -91,7 +89,7 @@ def syllables(sequence,
 
     # get the sonority profile for the sequence
     profile = ints(soundclass(
-        seq, model=model, cldf=cldf, stress=stress, diacritics=diacritics))
+        seq, model=model, slash=slash))
     syls = [list(syllable) for syllable in _iter_syllables(
         seq, profile, max_vowels=max_vowels, vowels=vowels, tones=tones)]
 
@@ -110,7 +108,7 @@ def syllables(sequence,
 def morphemes(sequence,
               separators=("+", "_", '#'),
               split_on_tones=False,
-              cldf=True):
+              slash=True):
     """
     Split a string into morphemes if it contains separators.
 
@@ -127,7 +125,7 @@ def morphemes(sequence,
         A nested list of the original segments split into morphemes.
     """
     if split_on_tones:
-        return syllables(sequence, cldf=cldf)
+        return syllables(sequence, slash=slash)
 
     def split_on_sep(seq):
         morpheme = []
