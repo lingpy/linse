@@ -39,6 +39,8 @@ def test_ipa(text, kw, seq):
         ('', []),
         ("tj~ut", ["tj~", "u", "t"]),
         ("kwh$ark", ["kwh$", "a", "r", "k"]),
+        ('kwh"$ark', ['kwh$"', "a", "r", "k"]),
+        ('kw*~ark', ['kw~*', 'a', 'r', 'k']) 
     ]
 )
 def test_asjp(text, seq):

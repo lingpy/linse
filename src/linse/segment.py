@@ -221,6 +221,8 @@ def asjp(word, merge_vowels=True):
             merge_vowels=merge_vowels
         )
     )
+    # patch from Wichmann's paper
+    tokens = re.sub(r'(["\*])([~\$])', r'\2\1', tokens)
     tokens = re.sub(r'([^ ]) ([^ ])~', r'\1\2~', tokens)
     tokens = re.sub(r'([^ ]) ([^ ]) ([^ ])\$', r'\1\2\3$', tokens)
     return tokens.split(' ')
