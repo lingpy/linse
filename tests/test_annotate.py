@@ -66,7 +66,7 @@ def test_clts():
             'rounded close back vowel', 'voiceless alveolar stop consonant',
             'unrounded close front vowel']
 
-    assert clts(["0"]) == ["?"]
+    assert clts(["0"]) == [REPLACEMENT]
 
 
 def test__token2soundclass():
@@ -80,6 +80,14 @@ def test__token2soundclass():
     assert linse.annotate._token2soundclass('ʰA/a', 'sca') == 'A'
     assert linse.annotate._token2soundclass('a/', 'sca') == REPLACEMENT
 
+    assert linse.annotate._token2soundclass("tt", "dolgo") == "T"
+    assert linse.annotate._token2soundclass("tt", "dolgo", strict=True) == REPLACEMENT
+
+
+def test_token2clts():
+    assert linse.annotate._token2clts("")[0] == REPLACEMENT
+    assert linse.annotate._token2clts("tt", strict=False)[0] == "t"
+    assert linse.annotate._token2clts("tt", strict=True)[0] == REPLACEMENT
 
 
 

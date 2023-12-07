@@ -15,7 +15,8 @@ CLTS = get_CLTS()
 NORM = get_NORMALIZE()
 
 
-def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS, cldf=True):
+def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS,
+                      cldf=True, strict=False):
     """
     Convert a single token into a sound-class.
 
@@ -61,6 +62,9 @@ def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS, cldf=T
     if not isinstance(model, Model):
         model = MODELS[model]
     
+    if strict:
+        return model[token] if token in model else REPLACEMENT
+
     for s in substrings(token):
         try:
             return model[s]
@@ -69,7 +73,8 @@ def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS, cldf=T
     return REPLACEMENT
 
 
-def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS, cldf=True):
+def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS,
+               cldf=True, strict=False):
     """
     Convert tokenized IPA strings into their respective class strings.
 
@@ -111,7 +116,9 @@ def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS, cldf
 
     out = []
     for token in tokens:
-        out.append(_token2soundclass(token, model, stress=stress, diacritics=diacritics, cldf=cldf))
+        out.append(_token2soundclass(token, model, stress=stress,
+                                     diacritics=diacritics, cldf=cldf,
+                                     strict=strict))
     if out.count(REPLACEMENT) == len(out):
         raise ValueError("[!] your sequence contains only unknown characters")
     return out
@@ -218,7 +225,7 @@ def prosody(sequence,
             format=True,
             stress=STRESS,
             diacritics=DIACRITICS,
-            cldf=True):
+            cldf=True, strict=False):
     """
     Create a prosodic string of the sonority profile of a sequence.
 
@@ -295,7 +302,8 @@ def prosody(sequence,
     # get the sonority profile
     sonority = [9] + \
         ints(soundclass(
-            sequence, model='art', stress=stress, diacritics=diacritics, cldf=cldf)) + \
+            sequence, model='art', stress=stress, diacritics=diacritics,
+            cldf=cldf, strict=strict)) + \
         [9]
     psequence = _process_prosody(sonority)
 
@@ -308,7 +316,7 @@ def prosodic_weight(sequence,
                     _transform=None,
                     stress=STRESS,
                     diacritics=DIACRITICS,
-                    cldf=True):
+                    cldf=True, strict=False):
     """
     Calculate prosodic weights for each position of a sequence.
 
@@ -346,7 +354,8 @@ def prosodic_weight(sequence,
     prosodic_string
 
     """
-    psequence = prosody(sequence, stress=stress, diacritics=diacritics, cldf=cldf)
+    psequence = prosody(sequence, stress=stress, diacritics=diacritics,
+                        cldf=cldf, strict=strict)
 
     # check for transformer
     if _transform:
@@ -423,16 +432,18 @@ def normalize(sequence):
     return [_norm(s) for s in sequence]
 
 
-def _token2clts(segment):
+def _token2clts(segment, strict=False):
+    if strict:
+        return CLTS[segment] if segment in CLTS else [REPLACEMENT, REPLACEMENT]
     for s in substrings(_norm(segment)):
         try:
             return CLTS[s]
         except KeyError:
             pass
-    return ["?", "?"]
+    return [REPLACEMENT, REPLACEMENT]
 
 
-def bipa(sequence):
+def bipa(sequence, strict=False):
     """
     Convert a sequence in supposed IPA to the B(road)IPA of CLTS.
 
@@ -441,10 +452,10 @@ def bipa(sequence):
     The mapping is not guaranteed to work as well as the more elaborate mapping
     with `pyclts`.
     """
-    return [_token2clts(segment)[0] for segment in sequence]
+    return [_token2clts(segment, strict=strict)[0] for segment in sequence]
 
 
-def clts(sequence):
+def clts(sequence, strict=False):
     """
     Convert a sequence in supposed IPA to the CLTS feature names.
 
@@ -453,7 +464,7 @@ def clts(sequence):
     The mapping is not guaranteed to work as well as the more elaborate mapping
     with `pyclts`.
     """
-    return [_token2clts(segment)[1] for segment in sequence]
+    return [_token2clts(segment, strict=strict)[1] for segment in sequence]
 
 
 def seallable(sequence,
