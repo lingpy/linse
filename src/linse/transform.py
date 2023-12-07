@@ -199,7 +199,7 @@ def _unorm(normalization, string):
 
 def segment(word: str, segments: typing.Container) -> typing.List[str]:
     """
-    Use
+    Segment a sequence with the help of list of subsequences.
     """
     if len(word) == 0:
         return [word]
@@ -223,6 +223,9 @@ def convert(segments: typing.Iterable[str],
             converter,
             column,
             missing="«{0}»") -> typing.List[str]:
+    """
+    Convert a segmented sequence with the help of a conversion table.
+    """
     return [
         converter.get(s, {column: missing.format(s)}).get(
             column, missing.format("column--{0}-not-found".format(column))

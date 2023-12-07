@@ -55,6 +55,12 @@ class TypedSequence(list):
     def __setitem__(self, index, item):
         list.__setitem__(self, index, self.__class__.read(item, self._type, self._strict))
 
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return TypedSequence(self._type, list(self)[key],
+                                 strict=self._strict)
+        return list(self)[key]
+
 
 class Morpheme(TypedSequence):  # noqa: N801
     def __init__(self, iterable, strict=False):
@@ -66,6 +72,11 @@ class Morpheme(TypedSequence):  # noqa: N801
         if len(item.split()) > 1:
             raise ValueError(item)
         return item
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return Morpheme(list(self)[key], strict=self._strict)
+        return list(self)[key]
 
 
 class Word(Morpheme):
@@ -94,6 +105,12 @@ class Word(Morpheme):
         self.morphemes[i] = Morpheme(item)
         new_word = self.sep.join([str(x) for x in self.morphemes])
         self.__init__(new_word, sep=self.sep)
+
+    def __getitem__(self, key):
+        if isinstance(key, slice):
+            return Word(list(self)[key], sep=self.sep)
+        return list(self)[key]
+
 
 
 ints = functools.partial(TypedSequence, int)

@@ -4,6 +4,7 @@ Annotating a sequence means creating a list of annotations for a sequence.
 from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
 from linse.util import get_CLTS, get_NORMALIZE
+from linse.subsequence import substrings 
 
 __all__ = [
     'soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
@@ -59,39 +60,13 @@ def _token2soundclass(token, model, stress=STRESS, diacritics=DIACRITICS, cldf=T
 
     if not isinstance(model, Model):
         model = MODELS[model]
-
-    try:
-        return model[token]
-    except KeyError:
+    
+    for s in substrings(token):
         try:
-            return model[token[0]]
-        except IndexError:
-            return REPLACEMENT
+            return model[s]
         except KeyError:
-            # check for stressed syllables
-            if token[0] in stress and len(token) > 1:
-                try:
-                    return model[token[1:]]
-                except KeyError:
-                    try:
-                        return model[token[1]]
-                    except KeyError:
-                        # new character for missing data and spurious items
-                        return REPLACEMENT
-            elif token[0] in diacritics:
-                if len(token) > 1:
-                    try:
-                        return model[token[1:]]
-                    except KeyError:
-                        try:
-                            return model[token[1]]
-                        except KeyError:
-                            return REPLACEMENT
-                else:
-                    return REPLACEMENT
-            else:
-                # new character for missing data and spurious items
-                return REPLACEMENT
+            pass
+    return REPLACEMENT
 
 
 def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS, cldf=True):
@@ -129,30 +104,6 @@ def soundclass(tokens, model='dolgo', stress=STRESS, diacritics=DIACRITICS, cldf
         interpretation. This practice is also accepted by the `EDICTOR
         <http://edictor.digling.org>`_ tool.
 
-    Returns
-    -------
-
-    classes : list
-        A sound-class representation of the tokenized IPA string in form of a
-        list. If sound classes cannot be resolved, the respective string will
-        be rendered as "0" (zero).
-
-    Notes
-    -----
-    The function ~lingpy.sequence.sound_classes.token2class returns a "0"
-    (zero) if the sound is not recognized by LingPy's sound class models. While
-    an unknown sound in a longer sequence is no problem for alignment
-    algorithms, we have some unwanted and often even unforeseeable behavior,
-    if the sequence is completely unknown. For this reason, this function
-    raises a ValueError, if a resulting sequence only contains unknown sounds.
-
-    Examples
-    --------
-    >>> from lingpy import *
-    >>> tokens = ipa2tokens('t͡sɔyɡə')
-    >>> classes = tokens2class(tokens,'sca')
-    >>> print(classes)
-    CUKE
     """
     # raise value error if input is not an iterable (tuple or list)
     if not isinstance(tokens, (tuple, list)):
@@ -334,7 +285,7 @@ def prosody(sequence,
 
     Examples
     --------
-    >>> prosodic_string(ipa2tokens('t͡sɔyɡə')
+    >>> prosody(Word('ts ɔy ɡ ə'))
     'AXBZ'
 
     """
@@ -473,7 +424,12 @@ def normalize(sequence):
 
 
 def _token2clts(segment):
-    return CLTS.get(_norm(segment), CLTS.get(_norm(segment[0]) if segment else '?', ['?', '?']))
+    for s in substrings(_norm(segment)):
+        try:
+            return CLTS[s]
+        except KeyError:
+            pass
+    return ["?", "?"]
 
 
 def bipa(sequence):

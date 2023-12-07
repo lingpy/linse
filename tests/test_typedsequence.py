@@ -30,6 +30,10 @@ def test_TypedSequence():
 
     assert repr(a1) == "'1 3'"
 
+    # check for slicing
+    assert isinstance(TypedSequence(str, "1 2 3")[:], TypedSequence)
+    assert TypedSequence(int, "1 2 3")[:2] == TypedSequence(int, "1 2")
+
 
 def test_ints():
     string2 = '1 2 3 1 2 3'
@@ -64,6 +68,10 @@ def test_misc():
     app = Morpheme('1 2 3')
     app.append('4')
     assert str(app) == '1 2 3 4'
+    
+    assert Morpheme("a b c")[:2] == Morpheme("a b")
+    assert isinstance(Morpheme("a b c")[:1], Morpheme)
+    
 
     app = ints('1 2 3')
     app.extend('4 5')
@@ -111,6 +119,9 @@ def test_misc():
     w.append("a")
     w.extend("a")
     assert str(w) == "a + a a + a"
+
+    assert Word("a b + b")[:2] == Word("a b")
+    assert Word("a b c")[0] == "a"
     
 
 

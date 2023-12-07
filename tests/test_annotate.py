@@ -8,6 +8,7 @@ import linse.annotate
     'seq,model,res',
     [
         ('th o ?/x a', 'cv', 'CVCV'),
+        ("b ˀⁿgʷ a", "sca", "PKA"),
         ('tʰ ɔ x ˈth ə r A ˈI ʲ', 'dolgo', 'TVKTVR' + REPLACEMENT + REPLACEMENT + REPLACEMENT),
     ]
 )
@@ -64,6 +65,8 @@ def test_clts():
     assert clts(['m', 'u', 't', 'i']) == ['voiced bilabial nasal consonant',
             'rounded close back vowel', 'voiceless alveolar stop consonant',
             'unrounded close front vowel']
+
+    assert clts(["0"]) == ["?"]
 
 
 def test__token2soundclass():
