@@ -2,6 +2,7 @@ import re
 import pathlib
 import functools
 import unicodedata
+from linse.util import get_CLTS
 
 __all__ = ['VOWELS', 'TONES', 'DIACRITICS', 'SEMI_DIACRITICS', 'STRESS', 'MODELS', 'Model', 'DVTS']
 
@@ -191,6 +192,10 @@ MODELS = {
     d.name: Model(d)
     for d in pathlib.Path(__file__).parent.joinpath('models').iterdir()
     if d.joinpath('converter').exists()}
+
+BIPA, CLTS = get_CLTS()
+MODELS["bipa"] = BIPA
+MODELS["clts"] = CLTS
 
 DVTS = {
     d.name: DVT(d)
