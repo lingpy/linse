@@ -49,8 +49,8 @@ def test_asjp(text, seq):
 
 def test_sampa():
     seq = 'tʰɔxtər'
-    assert ''.join(sampa2ipa('t_hOxt@r')) == seq
-    assert ' '.join(sampa('t_hOxt@r')) == 't _h O x t @ r'
+    assert ''.join(sampa('t_hOxt@r')) == seq
+    assert ' '.join(xsampa('t_hOxt@r')) == "tʰ ɔ x t ə r"
 
 
 def test_valid_word():

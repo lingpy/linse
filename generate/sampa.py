@@ -1,5 +1,4 @@
-from linse.sampa import SAMPA
-from linse.transform import segment, convert
+from linse.transform import segment, convert, SegmentGrouper
 from linse.models import BIPA
 from pathlib import Path
 import codecs
@@ -8,15 +7,19 @@ import linse
 import warnings
 
 
+sampa2ipa = SegmentGrouper.from_file(
+        Path(linse.__file__).parent / "data" / "sampa.tsv")
+ipa2sampa = {eval('"""' + v["IPA"] + '"""'): {"sampa": k} for k, v in
+             sampa2ipa.converter.items()}
+
 out = []
 problems = set()
-sampa = {k: {"sampa": v} for v, k in SAMPA.items()}
 
 visited = set()
 
 for sound in BIPA.values():
-    grouped = segment(sound, sampa)
-    converted = convert(grouped, sampa, "sampa")
+    grouped = segment(sound, ipa2sampa)
+    converted = convert(grouped, ipa2sampa, "sampa")
     
     errors = False
     for seg in converted:
@@ -34,9 +37,10 @@ with codecs.open(
     f.write("Sequence\tBIPA\n")
     for a, b in out:
         f.write(a + '\t' + b + '\n')
-    for k, v in SAMPA.items():
-        if k not in visited:
-            f.write(k + '\t' + v + '\n')
+    for k, v in ipa2sampa.items():
+        if v["sampa"] not in visited:
+            f.write(v["sampa"] + '\t' + k + '\n')
+    f.write(" \tNULL\n")
 
 for p in problems:
     warnings.warn("« " + p + " » " + " ".join(codepoints(p)))
