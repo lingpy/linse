@@ -8,6 +8,7 @@ import linse.annotate
     'seq,model,res',
     [
         ('th o ?/x a', 'cv', 'CVCV'),
+        ("b ˀⁿgʷ a", "sca", "PKA"),
         ('tʰ ɔ x ˈth ə r A ˈI ʲ', 'dolgo', 'TVKTVR' + REPLACEMENT + REPLACEMENT + REPLACEMENT),
     ]
 )
@@ -65,6 +66,8 @@ def test_clts():
             'rounded close back vowel', 'voiceless alveolar stop consonant',
             'unrounded close front vowel']
 
+    assert clts(["0"]) == [REPLACEMENT]
+
 
 def test__token2soundclass():
     assert linse.annotate._token2soundclass('', 'sca') == REPLACEMENT
@@ -77,14 +80,16 @@ def test__token2soundclass():
     assert linse.annotate._token2soundclass('ʰA/a', 'sca') == 'A'
     assert linse.annotate._token2soundclass('a/', 'sca') == REPLACEMENT
 
+    assert linse.annotate._token2soundclass("tt", "dolgo") == "T"
+    assert linse.annotate._token2soundclass("tt", "dolgo", strict=True) == REPLACEMENT
 
 
 
 def test_soundclass_err():
     with pytest.raises(ValueError):
         soundclass('bla', 'sca')
-    with pytest.raises(ValueError):
-        soundclass(['A', 'O'], 'sca')
+    with pytest.warns(UserWarning):
+        soundclass(["0"], "sca")
 
 
 @pytest.mark.parametrize(
