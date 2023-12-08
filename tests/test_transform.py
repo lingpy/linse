@@ -5,6 +5,7 @@ import pytest
 from linse.transform import *
 from linse.transform import retrieve_converter
 from linse.transform import _unorm
+from linse.typedsequence import ints
 from linse.util import iter_dicts_from_csv
 
 
@@ -125,6 +126,19 @@ def test_segment():
     assert segment("matam", {"m", "at", "a", "m"}) == ["m", "at", "a", "m"]
     assert segment("", {"a"}) == [""]
     assert segment("m", {}) == ["m"]
+
+    # test segment with non-string types
+    assert segment(
+            tuple([1, 2, 3, 4, 5]), 
+            {tuple([1, 2]), tuple([3]), tuple([4, 5])}
+            ) == [(1, 2), (3,), (4, 5)]
+
+    assert segment(
+            ints("1 2 3 4 5"), 
+            {ints("1 2"), ints("3"), ints("4 5")}
+            )[0] == ints("1 2")
+
+    
 
 
 def test_convert():

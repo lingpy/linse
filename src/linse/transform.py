@@ -201,20 +201,20 @@ def segment(word: str, segments: typing.Container) -> typing.List[str]:
     """
     if len(word) == 0:
         return [word]
-    queue = [[[], word, ""]]
+    queue = [[[], word, word[:0]]]
     while queue:
         segmented, current, rest = queue.pop(0)
         if current in segments and not rest:
             return segmented + [current]
         elif len(current) == 1 and current not in segments:
             if rest:
-                queue += [[segmented + [current], rest, ""]]
+                queue += [[segmented + [current], rest, word[:0]]]
             else:
                 return segmented + [current]
         elif current not in segments:
-            queue += [[segmented, current[: len(current) - 1], current[-1] + rest]]
+            queue += [[segmented, current[: len(current) - 1], current[-1:] + rest]]
         else:
-            queue += [[segmented + [current], rest, ""]]
+            queue += [[segmented + [current], rest, word[:0]]]
 
 
 def convert(segments: typing.Iterable[str],

@@ -122,6 +122,35 @@ def test_misc():
 
     assert Word("a b + b")[:2] == Word("a b")
     assert Word("a b c")[0] == "a"
+
+    # major tests for word properties
+    w = Word("")
+    assert not w
+    w.append("a")
+    w.append("b")
+    w.extend("a b")
+    assert w == Word("a b + a b")
+    
+    w.extend("")
+    assert w == Word("a b + a b")
+    assert w.morphemes[0] == Morpheme("a b")
+
+    w = Word("")
+    w += w
+    assert w == Word("")
+
+    w = Word("a b")
+    w += w
+    assert w == Word("a b + a b")
+
+    w = Word("")
+    # check that this is still an empty word
+    w.extend(" ")
+    assert not w
+
+    w.extend("a")
+    assert w == Word("a")
+    assert len(w.morphemes) == 1
     
 
 

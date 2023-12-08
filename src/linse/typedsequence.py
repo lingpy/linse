@@ -91,15 +91,31 @@ class Word(Morpheme):
         self.sep = sep
 
     def __add__(self, other):
-        return Word(str(self) + self.sep + str(other))
+        if self and other:
+            self.morphemes.append(Morpheme(other))
+            return Word(str(self) + self.sep + str(other))
+        else:
+            return Word(str(self) or str(other))
+
+    def __iadd__(self, other):
+        return self.__add__(other)
 
     def append(self, other):
-        self.morphemes[-1].append(other)
+        self.morphemes[-1].append(Morpheme(str(other)))
         return super(Word, self).append(other)
 
     def extend(self, other):
-        self.morphemes.append(Morpheme(other))
-        super(Word, self).extend(Word('') + Morpheme(other))
+        if not self and not Word(str(other)):
+            return
+        if not self:
+            self.morphemes = Word(str(other)).morphemes
+            return super(Word, self).__init__(str(other))
+        if not other:
+            return
+        if self and other:
+            self.morphemes.extend(Word(str(other)).morphemes)
+            return super(Word, self).__init__(str(self) + self.sep +
+                                              str(other))
 
     def replace(self, i, item):
         self.morphemes[i] = Morpheme(item)
