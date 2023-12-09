@@ -3,23 +3,85 @@ import pytest
 from linse.typedsequence import *
 
 
-def test_TypedSequence():
-    a1 = TypedSequence(int, '1 2 3')
+def test_TypedSequence_init():
+    with pytest.raises(ValueError):
+        _ = TypedSequence()
+
+    class T(TypedSequence):
+        item_type = int
+
+    s = TypedSequence(type=int)
+    assert s == T()
+    assert T(1) == T(['1'])
+
+    with pytest.raises(TypeError):
+        TypedSequence(['1'], type=int, strict=True)
+
+    assert TypedSequence('abc', type=str) == TypedSequence(['abc'], type=str)
+
+
+def test_TypedSequence_str():
+    s = TypedSequence(type=int)
+    assert str(s) == ''
+    assert s == []
+    assert str(TypedSequence([1, 2, 3], type=int)) == '1 2 3'
+    t = TypedSequence([1, 2, 3], type=int, separator='-')
+    assert str(t) == '1-2-3'
+    assert t == TypedSequence.from_string(str(t), type=t.item_type, separator=t.item_separator)
+
+
+def test_TypedSequence_hash():
+    s = TypedSequence([1, 2, 3], type=int)
+    d = {s: 5}
+    assert d[s] == 5, 'Cannot use TypedSequence as dict key'
+    # Hash includes the separator:
+    assert len({s, TypedSequence([1, 2, 3], type=int)}) == 1
+    assert len({s, TypedSequence([1, 2, 3], type=int, separator='x')}) == 2
+    # unless there's just one item in the sequence:
+    assert len(
+        {TypedSequence([1], type=int), TypedSequence([1], type=int, separator='x')}
+    ) == 1
+
+
+def test_TypedSequence_setitem():
+    s = TypedSequence(type=int)
+    s.insert(0, '3')
+    assert s == [3]
+
+    with pytest.raises(TypeError):
+        s[0] = []
+
+    s[0] = '5'
+    assert s == [5]
+
+    with pytest.raises(ValueError):
+        s.append('')
+
+
+def test_TypedSequence_getitem():
+    s = TypedSequence('1 2 3'.split(), type=int)
+    assert s[1] == 2
+    assert isinstance(s[:2], TypedSequence)
+    assert s[1:] == TypedSequence('2 3'.split(), type=int)
+
+
+def test_TypedSequence_and_list():
+    a1 = TypedSequence('1 2 3'.split(), type=int)
     a2 = [1, 2, 3]
     a3 = [1, 3]
-    assert list(a1) == a2
+    assert a1 == a2
     assert a1 != a3
     del a1[1]
-    assert list(a1) == a3
+    assert a1 == a3
     assert isinstance(a1 + [4, 5], TypedSequence)
-    assert not isinstance([4, 5] + a1, TypedSequence)
-    assert TypedSequence(int, str(a1)) == a1
+    assert isinstance([4, 5] + a1, TypedSequence)
+    assert TypedSequence(str(a1).split(), type=int) == a1
 
-    with pytest.raises(ValueError):
-        TypedSequence(int, '1 2 3'.split(), strict=True)
+    with pytest.raises(TypeError):
+        TypedSequence('1 2 3'.split(), type=int, strict=True)
 
-    a = TypedSequence(int, [], strict=True)
-    with pytest.raises(ValueError):
+    a = TypedSequence(type=int, strict=True)
+    with pytest.raises(TypeError):
         a.append('a')
 
     with pytest.raises(ValueError):
@@ -28,129 +90,126 @@ def test_TypedSequence():
     with pytest.raises(ValueError):
         a.extend(['a'])
 
-    assert repr(a1) == "'1 3'"
-
     # check for slicing
-    assert isinstance(TypedSequence(str, "1 2 3")[:], TypedSequence)
-    assert TypedSequence(int, "1 2 3")[:2] == TypedSequence(int, "1 2")
+    assert isinstance(TypedSequence("1 2 3".split(), type=int)[:], TypedSequence)
+    assert TypedSequence("1 2 3".split(), type=int)[:2] == TypedSequence("1 2".split(), type=int)
 
 
 def test_ints():
     string2 = '1 2 3 1 2 3'
-    i = ints(string2)
+    i = ints(string2.split())
     assert i[0] == 1
     assert str(i) == string2
 
 
 def test_floats():
     string2 = '1 2 3 1 2 3'
-    i = ints(string2)
-    f = floats(string2)
+    i = ints(string2.split())
+    f = floats(string2.split())
     assert float(i[0]) == f[0]
     assert ' '.join([str(fl).split('.')[0] for fl in f]) == string2
     assert str(f).split()[0].startswith('1.')
 
+    with pytest.raises(TypeError):
+        _ = i + f
 
-def test_string():
-    string1 = '1 2 3 + 1 2 3'
-    s = Morpheme(string1)
+    i += [n for n in f]
+    assert len(i) == 12
+
+
+def test_Morpheme():
+    string1 = '1 2 3'
+    s = Morpheme(string1.split())
     assert str(s) == string1
 
+    assert Morpheme(s) == s
 
-def test_misc():
+    with pytest.raises(TypeError):
+        _ = Morpheme('1 2 3 + 1 2 3'.split())
+
     # check for types
-    s = Morpheme('1 2 3')
+    s = Morpheme('1 2 3'.split())
+    assert s == ['1', '2', '3']
     assert str(s + s) == '1 2 3 1 2 3'
-    i = ints('1 2 3')
+    i = ints('1 2 3'.split())
     assert str(i + [1, 2, 3]) == '1 2 3 1 2 3'
 
     # append
-    app = Morpheme('1 2 3')
+    app = Morpheme('1 2 3'.split())
     app.append('4')
     assert str(app) == '1 2 3 4'
     
-    assert Morpheme("a b c")[:2] == Morpheme("a b")
-    assert isinstance(Morpheme("a b c")[:1], Morpheme)
+    assert Morpheme("a b c".split())[:2] == Morpheme("a b".split())
+    assert isinstance(Morpheme("a b c".split())[:1], Morpheme)
     
 
-    app = ints('1 2 3')
-    app.extend('4 5')
+    app = ints('1 2 3'.split())
+    app.extend('4 5'.split())
     assert str(app) == '1 2 3 4 5'
 
-    with pytest.raises(ValueError):
-        Morpheme('1 2').append('2 3')
+    with pytest.raises(TypeError):
+        Morpheme('1 2'.split()).append('2 3'.split())
 
-    app = Morpheme('1 2 3')
-    app[1] = 2
+    app = Morpheme('1 2 3'.split())
+    with pytest.raises(TypeError):
+        app[1] = 2
+    app[1] = '2'
     assert app[1] == '2'
 
-    s = Word("a b c + d e f")
-    assert str(s.morphemes[0]) == "a b c"
+
+def test_Word():
+    s = Word.from_string("a b c + d e f")
+    assert str(s[0]) == "a b c"
 
     assert str(s + s) == str(s) + " + " + str(s)
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         s.append(str(s))
-    s.extend(str(s))
-    s.replace(0, "b c d")
-    assert str(s.morphemes[0]) == "b c d"
+    s.extend(Word.from_string(str(s)))
+    s[0] = Morpheme("b c d".split())
+    assert str(s[0]) == "b c d"
 
-    word = Word("a + b + c")
+    word = Word.from_string("a + b + c")
     
     # make sure word can be hashed
-    word_in_dict = {word: word.morphemes}
+    word_in_dict = {word: word}
 
     # make sure we can access word by its str() attribute
-    assert word_in_dict[Word("a + b + c")] == word.morphemes
+    assert word_in_dict[Word.from_string("a + b + c")] == word
 
     # append and extend
     # append adds one item to the list extend adds a new morpheme
-    w1, w2 = Word("a + b"), Word("a + b")
-    w1.append("c")
-    w2.extend("c")
-    assert w1 != w2
-    assert w1.morphemes != w2.morphemes
-    assert str(w1) == "a + b c"
-    assert str(w2) == "a + b + c"
-    
+    w1, w2 = Word.from_string("a + b"), Word.from_string("a + b")
+    w1.append(Morpheme("c"))
+    w2.extend(["c"])
+    assert w1 == w2
+
     # append, extend, append
     w = Word("")
     w.append("a")
     w.extend("a")
     w.append("a")
     w.extend("a")
-    assert str(w) == "a + a a + a"
+    assert str(w) == "a + a + a + a"
 
-    assert Word("a b + b")[:2] == Word("a b")
-    assert Word("a b c")[0] == "a"
+    assert Word.from_string("a b + b")[:1] == Word.from_string("a b")
+    assert Word.from_string("a b c")[0][0] == "a"
 
     # major tests for word properties
     w = Word("")
     assert not w
-    w.append("a")
-    w.append("b")
-    w.extend("a b")
-    assert w == Word("a b + a b")
+    w.insert(0, Morpheme("a"))
+    w[0].append("b")
+    w.extend([Morpheme.from_string("a b")])
+    assert w == Word.from_string("a b + a b")
     
-    w.extend("")
-    assert w == Word("a b + a b")
-    assert w.morphemes[0] == Morpheme("a b")
+    w.extend([])
+    assert w == Word.from_string("a b + a b")
+    assert w[0] == Morpheme.from_string("a b")
 
     w = Word("")
     w += w
     assert w == Word("")
 
-    w = Word("a b")
+    w = Word.from_string("a b")
     w += w
-    assert w == Word("a b + a b")
-
-    w = Word("")
-    # check that this is still an empty word
-    w.extend(" ")
-    assert not w
-
-    w.extend("a")
-    assert w == Word("a")
-    assert len(w.morphemes) == 1
-    
-
-
+    assert w == Word.from_string("a b + a b")
