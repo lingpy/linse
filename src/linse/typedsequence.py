@@ -1,5 +1,5 @@
+import re
 import functools
-import itertools
 
 __all__ = ['TypedSequence', 'Morpheme', 'Word', 'ints', 'floats']
 
@@ -8,126 +8,186 @@ class TypedSequence(list):
     """
     A list of objects of the same type.
     """
-    def __init__(self, type_, iterable, strict=False):
+    item_type = None
+    item_separator = None
+
+    def __init__(self,
+                 iterable=None,
+                 type=None,
+                 separator=None,
+                 strict=False):
         """
-        :param type_: Type class for the items of the sequence
+        If `strict` is `False` - the default - items to be added to the sequence will be cast to \
+        the required type, if this is implemented in the type's initializer. E.g. `int` can be \
+        initialized with a suitable `str`.
+
         :param iterable: Iterable of items
-        :param strict: Boolean forcing type check if `True` and type cast if
-            `False`
+        :param type: Type class for the items of the sequence
+        :param strict: Flag signaling whether to strictly type check items in the sequence. If \
+        `True`, no implicit type casting will be done when adding items to the sequence. If \
+        `False`, implicit type casting - as far as supported by `type` will be done.
         """
-        self._type = type_
-        self._strict = strict
-        items = []
-        for x in (iterable.split() if isinstance(iterable, str) else iterable):
-            items.append(self.__class__.read(x, self._type, self._strict))
-        list.__init__(self, items)
+        if type:
+            self.item_type = type
+        if self.item_type is None:
+            raise ValueError('TypedSequence must have an item type.')
+        if separator:
+            self.item_separator = separator
+        self.strict = strict
+        super().__init__(self._iter_items(iterable or []))
 
-    @staticmethod
-    def read(item, type_, strict):
-        if not isinstance(item, type_):
-            if strict:
-                raise ValueError(item)
-            item = type_(item)
-        return item
+    def _cast(self, item):
+        if isinstance(item, self.item_type):
+            return item
+        if self.strict:
+            raise TypeError('Items in TypedSequence must be of type {}'.format(self.item_type))
+        return self.item_type(item)
 
-    @staticmethod
-    def write(item):
-        return str(item)
+    def _iter_items(self, iterable):
+        if isinstance(iterable, self.item_type):
+            # We want `str` to **not** be interpreted as list of characters!
+            iterable = [iterable]
+        for item in iterable:
+            yield self._cast(item)
+
+    def _from_items(self, iterable):
+        if isinstance(iterable, TypedSequence):
+            if self.item_type != iterable.item_type:
+                raise TypeError()
+            return iterable
+        return self.__class__(iterable, type=self.item_type, separator=self.item_separator)
 
     def __str__(self):
-        return ' '.join([self.__class__.write(x) for x in self])
+        return (self.item_separator or ' ').join([str(item) for item in self])
 
-    def __repr__(self):
-        return repr(str(self))
+    @classmethod
+    def from_string(cls, s, type=None, separator=None, strict=False):
+        return cls(
+            s.split(sep=separator or cls.item_separator),
+            type=type or cls.item_type,
+            separator=separator or cls.item_separator,
+            strict=strict)
 
     def __hash__(self):
         return hash(str(self))
 
     def __add__(self, other):
-        return TypedSequence(self._type, itertools.chain(self, other), strict=self._strict)
+        return self._from_items(list(self) + list(self._from_items(other)))
+
+    def __radd__(self, other):
+        return self._from_items(list(self._from_items(other)) + list(self))
+
+    def __iadd__(self, other):
+        self.extend(other)
+        return self
 
     def append(self, item):
-        list.append(self, self.__class__.read(item, self._type, self._strict))
+        return super().append(self._cast(item))
 
     def extend(self, other):
-        list.extend(self, TypedSequence(self._type, other, strict=self._strict))
+        return super().extend(self._from_items(other))
+
+    def insert(self, __index, __object):
+        return super().insert(__index, self._cast(__object))
 
     def __setitem__(self, index, item):
-        list.__setitem__(self, index, self.__class__.read(item, self._type, self._strict))
+        super().__setitem__(index, self._cast(item))
 
     def __getitem__(self, key):
         if isinstance(key, slice):
-            return TypedSequence(self._type, list(self)[key],
-                                 strict=self._strict)
+            return self._from_items(list(self)[key])
         return list(self)[key]
+
+
+class Segment(str):
+    """
+    A segment is a non-empty string which does not contain punctuation.
+    """
+    def __new__(cls, s):
+        if not isinstance(s, str) or re.search(r'\s+', s) or '+' in s or not s:
+            raise TypeError('Segments must be non-empty strings without whitespace or "+".')
+        return str.__new__(cls, s)
 
 
 class Morpheme(TypedSequence):  # noqa: N801
-    def __init__(self, iterable, strict=False):
-        TypedSequence.__init__(self, str, iterable, strict=strict)
+    """
+    A morpheme is a sequence of segments.
 
-    @staticmethod
-    def read(item, type_, strict):
-        item = TypedSequence.read(item, type_, strict)
-        if len(item.split()) > 1:
-            raise ValueError(item)
-        return item
+    .. code-block:: python
 
-    def __getitem__(self, key):
-        if isinstance(key, slice):
-            return Morpheme(list(self)[key], strict=self._strict)
-        return list(self)[key]
+        >>> m = Morpheme('abu')
+        >>> str(m)
+        'a b u'
+        >>> m.to_text()
+        'abu'
+        >>> m[0]
+        'a'
+        >>> m2 = Morpheme.from_string(str(m))
+        >>> m2 == m
+        True
+        >>> m.append('r')
+        >>> m
+        ['a', 'b', 'u', 'r']
+   """
+    item_type = Segment
+    item_separator = ' '
 
-
-class Word(Morpheme):
-
-    def __init__(self, iterable, sep=" + "):
-        Morpheme.__init__(self, iterable, strict=False)
-        self.morphemes = [
-            Morpheme(x) for x in (
-                ' '.join(iterable).split(sep)
-                if not isinstance(iterable, str)
-                else iterable.split(sep))]
-        self.sep = sep
-
-    def __add__(self, other):
-        if self and other:
-            self.morphemes.append(Morpheme(other))
-            return Word(str(self) + self.sep + str(other))
+    @classmethod
+    def from_string(cls, s):
+        if re.search(r'\s+', s):
+            # We assume that s is a whitespace-separated list of segments:
+            s = s.split()
         else:
-            return Word(str(self) or str(other))
+            #
+            # FIXME: do segmentation here!
+            #
+            s = list(s)
+        return cls(s)
 
-    def __iadd__(self, other):
-        return self.__add__(other)
-
-    def append(self, other):
-        self.morphemes[-1].append(Morpheme(str(other)))
-        return super(Word, self).append(other)
-
-    def extend(self, other):
-        if not self and not Word(str(other)):
-            return
-        if not self:
-            self.morphemes = Word(str(other)).morphemes
-            return super(Word, self).__init__(str(other))
-        if not other:
-            return
-        if self and other:
-            self.morphemes.extend(Word(str(other)).morphemes)
-            return super(Word, self).__init__(str(self) + self.sep +
-                                              str(other))
-
-    def replace(self, i, item):
-        self.morphemes[i] = Morpheme(item)
-        new_word = self.sep.join([str(x) for x in self.morphemes])
-        self.__init__(new_word, sep=self.sep)
-
-    def __getitem__(self, key):
-        if isinstance(key, slice):
-            return Word(list(self)[key], sep=self.sep)
-        return list(self)[key]
+    def to_text(self):
+        return ''.join(self)
 
 
+class Word(TypedSequence):
+    """
+    A word is a sequence of morphemes.
 
-ints = functools.partial(TypedSequence, int)
-floats = functools.partial(TypedSequence, float)
+    Words can be represented as strings in two ways:
+    - as "string" of ' + '-separated morphemes, e.g. 'a m u q’ + d a + č',
+    - as "text", e.g. 'amuq’dač'.
+    """
+    item_type = Morpheme
+    item_separator = ' + '
+
+    @classmethod
+    def from_string(cls, s: str, **kw):
+        kw['type'] = Morpheme
+        # We assume s is a list of morphemes separated by +:
+        return cls(iterable=[
+            Morpheme.from_string(m.strip()) for m in s.split(cls.item_separator.strip())], **kw)
+
+    def to_text(self):
+        return ''.join(m.to_text() for m in self)
+
+
+class Phrase(TypedSequence):
+    item_type = Word
+    item_separator = ' _ '
+
+    @classmethod
+    def from_string(cls, s: str, **kw):  # pragma: no cover
+        kw['type'] = Word
+        # We assume s is a list of morphemes separated by +:
+        return cls(iterable=[
+            Word.from_string(m.strip()) for m in s.split(cls.item_separator.strip())], **kw)
+
+    @classmethod
+    def from_text(cls, text):
+        raise NotImplementedError()  # pragma: no cover
+        #return cls(iterable=[
+        #    Word.from_text()
+        #])
+
+
+ints = functools.partial(TypedSequence, type=int)
+floats = functools.partial(TypedSequence, type=float)

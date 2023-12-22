@@ -134,9 +134,9 @@ def test_segment():
             ) == [(1, 2), (3,), (4, 5)]
 
     assert segment(
-            ints("1 2 3 4 5"), 
-            {ints("1 2"), ints("3"), ints("4 5")}
-            )[0] == ints("1 2")
+            ints("1 2 3 4 5".split()),
+            {ints("1 2".split()), ints(["3"]), ints("4 5".split())}
+            )[0] == ints("1 2".split())
 
     
 
