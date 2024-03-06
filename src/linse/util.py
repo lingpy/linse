@@ -17,9 +17,7 @@ def data_path(*comps):
 def get_CLTS():
     with zipfile.ZipFile(data_path('clts.zip').as_posix(), 'r') as zf:
         clts = json.loads(zf.read('clts.json'))
-    return (
-            {k: v[0] for k, v in clts.items()}, 
-            {k: v[1] for k, v in clts.items()})
+    return ({k: v[0] for k, v in clts.items()}, {k: v[1] for k, v in clts.items()})
 
 
 def get_NORMALIZE():

@@ -2,6 +2,7 @@ import re
 import pathlib
 import functools
 import unicodedata
+
 from linse.util import get_CLTS
 
 __all__ = ['VOWELS', 'TONES', 'DIACRITICS', 'SEMI_DIACRITICS', 'STRESS', 'MODELS', 'Model', 'DVTS']

@@ -1,12 +1,14 @@
 """
 Annotating a sequence means creating a list of annotations for a sequence.
 """
+import typing
+import warnings
+import functools
+
 from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
-from linse.util import get_CLTS, get_NORMALIZE
-from linse.subsequence import substrings 
-from functools import partial
-import warnings
+from linse.util import get_NORMALIZE
+from linse.subsequence import subsequences
 
 __all__ = [
     'soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
@@ -16,13 +18,12 @@ REPLACEMENT = '\ufffd'
 NORM = get_NORMALIZE()
 
 
-def _token2soundclass(token, model,
-                      slash=True, strict=False):
+def _token2soundclass(token, model, slash=True, strict=False):
     """
     Convert a single token into a sound-class item.
     """
     token = _norm(token)
-    
+
     if slash:
         a, sep, b = token.partition('/')
         if sep:
@@ -30,20 +31,20 @@ def _token2soundclass(token, model,
 
     if not isinstance(model, (Model, dict)):
         model = MODELS[model]
-    
+
     if strict:
         return model[token] if token in model else REPLACEMENT
 
-    for s in substrings(token):
-        try:
+    for s in subsequences(token):
+        if s in model:
             return model[s]
-        except KeyError:
-            pass
     return REPLACEMENT
 
 
-def soundclass(tokens, model='dolgo',
-               slash=True, strict=False):
+def soundclass(tokens: typing.Union[typing.Tuple[str, ...], typing.List[str]],
+               model='dolgo',
+               slash=True,
+               strict=False) -> list:
     """
     Convert tokenized IPA strings into their respective class strings.
     """
@@ -53,15 +54,14 @@ def soundclass(tokens, model='dolgo',
 
     out = []
     for token in tokens:
-        out.append(_token2soundclass(token, model, slash=slash,
-                                     strict=strict))
+        out.append(_token2soundclass(token, model, slash=slash, strict=strict))
     if out.count(REPLACEMENT) == len(out):
         warnings.warn("[i] your sequence {0} contains only unknown characters".format(tokens))
     return out
 
 
-clts = partial(soundclass, model="clts")
-bipa = partial(soundclass, model="bipa")
+clts = functools.partial(soundclass, model="clts")
+bipa = functools.partial(soundclass, model="bipa")
 
 
 PROSODY_FORMATS = {
@@ -161,18 +161,15 @@ def _process_prosody(sonority):
     return psequence
 
 
-def prosody(sequence,
-            format=True,
-            slash=True, 
-            strict=False):
+def prosody(sequence: typing.List[str], format=True, slash=True, strict=False) -> list:
     """
     Create a prosodic string of the sonority profile of a sequence.
 
     Parameters
     ----------
 
-    seq : list
-        A list of integers indicating the sonority of the tokens of the
+    sequence : list
+        A list of characters indicating the sonority of the tokens of the
         underlying sequence.
 
     Returns
@@ -189,12 +186,9 @@ def prosody(sequence,
     Notes
     -----
 
-    A prosodic string is a sequence of specific characters which indicating
-    their resprective prosodic context (see :evobib:`List2012` or
-    :evobib:`List2012a` for a detailed description).
-    In contrast to the previous model, the current implementation allows for a
-    more fine-graded distinction between different prosodic segments. The
-    current scheme distinguishes 9 prosodic positions:
+    A prosodic string is a sequence of specific characters indicating their resprective prosodic
+    context (see :evobib:`List2012` or :evobib:`List2012a` for a detailed description).
+    The scheme distinguishes 9 prosodic positions:
 
     * ``A``: sequence-initial consonant
     * ``B``: syllable-initial, non-sequence initial consonant in a context of
@@ -211,7 +205,8 @@ def prosody(sequence,
 
     Examples
     --------
-    >>> prosody(Word('ts ɔy ɡ ə'))
+    >>> import linse.typedsequence
+    >>> prosody(linse.typedsequence.Morpheme('ts ɔy ɡ ə'))
     'AXBZ'
 
     """
@@ -219,11 +214,7 @@ def prosody(sequence,
         return []
 
     # get the sonority profile
-    sonority = [9] + \
-        ints(soundclass(
-            sequence, model='art',
-            slash=slash, strict=strict)) + \
-        [9]
+    sonority = [9] + ints(soundclass(sequence, model='art', slash=slash, strict=strict)) + [9]
     psequence = _process_prosody(sonority)
 
     assert len(psequence) == len(sequence)
@@ -231,16 +222,17 @@ def prosody(sequence,
     return [conv.get(x, x) for x in psequence]
 
 
-def prosodic_weight(sequence,
-                    _transform=None,
-                    slash=True, strict=False):
+def prosodic_weight(sequence: typing.List[str],
+                    _transform: typing.Optional[typing.Dict[str, float]] = None,
+                    slash=True,
+                    strict=False) -> typing.List[float]:
     """
     Calculate prosodic weights for each position of a sequence.
 
     Parameters
     ----------
 
-    prostring : string
+    sequence : list
         A prosodic string as it is returned by :py:func:`prosodic_string`.
     _transform : dict
         A dictionary that determines how prosodic strings should be transformed
@@ -261,9 +253,9 @@ def prosodic_weight(sequence,
 
     Examples
     --------
-    >>> from lingpy import *
+    >>> from linse.annotate import prosodic_weight
     >>> prostring = '#vC>'
-    >>> prosodic_weight(prostring)
+    >>> prosodic_weight(list(prostring))
     [2.0, 1.3, 1.5, 0.7]
 
     See also
@@ -271,8 +263,7 @@ def prosodic_weight(sequence,
     prosodic_string
 
     """
-    psequence = prosody(sequence, slash=slash,
-                        strict=strict)
+    psequence = prosody(sequence, slash=slash, strict=strict)
 
     # check for transformer
     if _transform:
@@ -347,7 +338,6 @@ def normalize(sequence):
     Normalize obvious and frequent miscodings of IPA.
     """
     return [_norm(s) for s in sequence]
-
 
 
 def seallable(sequence,

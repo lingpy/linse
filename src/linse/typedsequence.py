@@ -184,9 +184,6 @@ class Phrase(TypedSequence):
     @classmethod
     def from_text(cls, text):
         raise NotImplementedError()  # pragma: no cover
-        #return cls(iterable=[
-        #    Word.from_text()
-        #])
 
 
 ints = functools.partial(TypedSequence, type=int)

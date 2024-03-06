@@ -1,7 +1,9 @@
 """
 Sequence operations that yield various forms of substrings and subsequences.
 """
-from functools import partial
+import typing
+import functools
+import itertools
 
 
 def _affixes(slicer, sequence):
@@ -14,19 +16,19 @@ def _affixes(slicer, sequence):
     return out
 
 
-affixes = partial(_affixes, lambda x, i: [x[:-i], x[i:]])
-prefixes = partial(_affixes, lambda x, i: [x[:-i]])
-suffixes = partial(_affixes, lambda x, i: [x[i:]])
+affixes = functools.partial(_affixes, lambda x, i: [x[:-i], x[i:]])
+prefixes = functools.partial(_affixes, lambda x, i: [x[:-i]])
+suffixes = functools.partial(_affixes, lambda x, i: [x[i:]])
 
 
-def substrings(sequence, sort=False):
+def subsequences(sequence: typing.Sequence) -> typing.List[typing.Sequence]:
     """
-    Function returns all possible n-grams of a given sequence.
+    Returns all subsequences (of length > 0) of a given sequence.
 
     Parameters
     ----------
     sequence : list or str
-        The sequence that shall be converted into it's ngram-representation.
+        The sequence that shall be converted into it's list of subsequences.
 
     Returns
     -------
@@ -36,42 +38,10 @@ def substrings(sequence, sort=False):
 
     Examples
     --------
-    >>> get_all_ngrams('abcde')
-    ['abcde', 'bcde', 'abcd', 'cde', 'abc', 'bcd', 'ab', 'de', 'cd', 'bc', 'a', 'e', 'b', 'd', 'c']
-
+    >>> subsequences('abcd')
+    ['abcd', 'abc', 'bcd', 'ab', 'bc', 'cd', 'a', 'b', 'c', 'd']
     """
-
-    # get the length of the word
-    l = len(sequence)
-
-    # make dummy sequence with numbers as indices
-    numeric = tuple(range(len(sequence)))
-
-    # determine the starting point
-    i = 0
-    out = []
-
-    # loop in branching style over all subsequences
-    while i != l and i < l:
-        # copy the sequence
-        new_sequence = numeric[i:l]
-
-        # append the sequence to the output list
-        out += [new_sequence]
-
-        # loop over the new sequence
-        for j in range(1, len(new_sequence)):
-            out += [new_sequence[:j]]
-            out += [new_sequence[j:]]
-
-        # increment i and decrement l
-        i += 1
-        l -= 1
-    
-    # sort by size: this sorting guarantees a "logical" order starting from
-    # longest prefix, to longest suffix, etc.
-    out = sorted(out, key=lambda x: (len(x), -x[0]), reverse=True)
-
-    sort = sort or list
-
-    return sort([sequence[subs[0] : subs[-1] + 1] for subs in out])
+    return [
+        sequence[x:y] for x, y in sorted(
+            itertools.combinations(range(len(sequence) + 1), 2),
+            key=lambda x: (x[0] - x[1], x[0]))]

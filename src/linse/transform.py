@@ -2,10 +2,9 @@
 Transformations convert a sequence of tokens to new data structure.
 """
 import typing
+import collections
 import unicodedata
-from collections import defaultdict
 
-from linse.models import STRESS, DIACRITICS
 from linse.typedsequence import ints
 from linse.annotate import soundclass, prosody
 from linse.util import iter_dicts_from_csv, write_csv
@@ -170,7 +169,7 @@ def syllable_inventories(
     D = {}
     for form in forms:
         if form[doculect] not in D:
-            D[form[doculect]] = defaultdict(lambda: defaultdict(list))
+            D[form[doculect]] = collections.defaultdict(lambda: collections.defaultdict(list))
         for morpheme in morphemes(form[segments]):
             for syl in syllables(morpheme):
                 cv = prosody(syl, format=format)
@@ -249,7 +248,7 @@ def retrieve_converter(
              retrieved from each word, if None, we assume that the
              individual words are iterables
     """
-    converter = defaultdict(lambda: {grapheme_column: "", frequency_column: 0})
+    converter = collections.defaultdict(lambda: {grapheme_column: "", frequency_column: 0})
     for word in words:
         for token in mapping(word) if mapping else word:
             converter[token][grapheme_column] = token
