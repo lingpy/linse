@@ -8,7 +8,7 @@ import functools
 from linse.models import *  # noqa: F401, F403
 from linse.typedsequence import ints, floats
 from linse.util import get_NORMALIZE
-from linse.subsequence import subsequences
+from linse.subsequence import substrings
 
 __all__ = [
     'soundclass', 'REPLACEMENT', 'prosody', 'prosodic_weight',
@@ -35,7 +35,7 @@ def _token2soundclass(token, model, slash=True, strict=False):
     if strict:
         return model[token] if token in model else REPLACEMENT
 
-    for s in subsequences(token):
+    for s in substrings(token):
         if s in model:
             return model[s]
     return REPLACEMENT

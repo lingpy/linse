@@ -1,4 +1,4 @@
-from linse.subsequence import affixes, prefixes, suffixes, subsequences
+from linse.subsequence import affixes, prefixes, suffixes, substrings
 
 
 def test_misc():
@@ -7,6 +7,6 @@ def test_misc():
     assert suffixes("abc") == ["abc", "bc", "c"]
     assert prefixes("abc") == ["abc", "ab", "a"]
 
-    assert subsequences("abc") == ["abc", "ab", "bc", "a", "b", "c"]
+    assert substrings("abc") == ["abc", "ab", "bc", "a", "b", "c"]
 
 

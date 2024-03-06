@@ -21,9 +21,9 @@ prefixes = functools.partial(_affixes, lambda x, i: [x[:-i]])
 suffixes = functools.partial(_affixes, lambda x, i: [x[i:]])
 
 
-def subsequences(sequence: typing.Sequence) -> typing.List[typing.Sequence]:
+def substrings(sequence: typing.Sequence) -> typing.List[typing.Sequence]:
     """
-    Returns all subsequences (of length > 0) of a given sequence.
+    Returns all contiguous subsequences (of length > 0) of a given sequence.
 
     Parameters
     ----------
@@ -38,7 +38,7 @@ def subsequences(sequence: typing.Sequence) -> typing.List[typing.Sequence]:
 
     Examples
     --------
-    >>> subsequences('abcd')
+    >>> substrings('abcd')
     ['abcd', 'abc', 'bcd', 'ab', 'bc', 'cd', 'a', 'b', 'c', 'd']
     """
     return [
