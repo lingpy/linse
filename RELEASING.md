@@ -2,6 +2,14 @@
 Releasing linse
 ===============
 
+- Fetch the most recent CLTS data via pyclts:
+  ```shell
+  git -C ../../cldf-clts/clts-data/ tag
+  ```
+  ```shell
+  clts --repos ../../cldf-clts/clts-data/ --repos-version v2.2.0 dist --destination src/linse/data/clts.zip
+  ```
+
 - Do platform test via tox:
   ```shell
   tox -r
@@ -20,11 +28,6 @@ Releasing linse
 - Create the release commit:
   ```shell
   git commit -a -m "release <VERSION>"
-  ```
-
-- Fetch the most recent data from pyclts:
-  ```shell
-  $ clts dump --destination=LINSE/src/linse/data/clts.zip
   ```
 
 - Create a release tag:
