@@ -38,8 +38,8 @@ def substrings(sequence: typing.Sequence) -> typing.List[typing.Sequence]:
 
     Examples
     --------
-    >>> substrings('abcd')
-    ['abcd', 'abc', 'bcd', 'ab', 'bc', 'cd', 'a', 'b', 'c', 'd']
+    >>> substrings('hallo')
+    ['hallo', 'hall', 'allo', 'hal', 'all', 'llo', 'ha', 'al', 'll', 'lo', 'h', 'a', 'l', 'l', 'o']
     """
     return [
         sequence[x:y] for x, y in sorted(
