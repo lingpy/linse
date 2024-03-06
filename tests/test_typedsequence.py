@@ -121,6 +121,7 @@ def test_Morpheme():
     string1 = '1 2 3'
     s = Morpheme(string1.split())
     assert str(s) == string1
+    assert s.to_text() == '123'
 
     assert Morpheme(s) == s
 
@@ -160,7 +161,7 @@ def test_Morpheme():
 def test_Word():
     s = Word.from_string("a b c + d e f")
     assert str(s[0]) == "a b c"
-
+    assert s.to_text() == 'abcdef'
     assert str(s + s) == str(s) + " + " + str(s)
     with pytest.raises(TypeError):
         s.append(str(s))

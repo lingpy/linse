@@ -61,6 +61,7 @@ def test_bipa():
             'tʰ', 'o', 'x', 't', 'eː', 'r']
 
 
+@pytest.mark.filterwarnings("ignore:")
 def test_clts():
     assert clts(['m', 'u', 't', 'i']) == ['voiced bilabial nasal consonant',
             'rounded close back vowel', 'voiceless alveolar stop consonant',
