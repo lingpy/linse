@@ -169,6 +169,16 @@ def test_Word():
     s[0] = Morpheme("b c d".split())
     assert str(s[0]) == "b c d"
 
+    # test for monosegmental multi-character morphemes
+    word = Word.from_segments("a b + cd")
+    assert len(word[1]) == 1
+    assert word[1][0] == "cd"
+
+    # test custom separator & whitespace trimming
+    word = Word.from_segments("a b =  c", separator="=")
+    assert len(word) == 2
+    assert str(word) == "a b + c"
+
     word = Word.from_string("a + b + c")
     
     # make sure word can be hashed

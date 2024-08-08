@@ -133,16 +133,25 @@ class Morpheme(TypedSequence):  # noqa: N801
     item_separator = ' '
 
     @classmethod
-    def from_string(cls, s):
-        if re.search(r'\s+', s):
-            # We assume that s is a whitespace-separated list of segments:
-            s = s.split()
+    def from_string(cls, s, separator=None):
+        separator = separator or cls.item_separator
+        if separator.strip():  # if the separator is something else than whitespaces in any form
+            separator = "\s*" + re.escape(separator) + "\s*"
+            s = re.split(separator, s)
         else:
-            #
-            # FIXME: do segmentation here!
-            #
-            s = list(s)
+            if re.search(r'\s+', s):
+                # We assume that s is a whitespace-separated list of segments:
+                s = s.split()
+            else:
+                #
+                # FIXME: do segmentation here!
+                #
+                s = list(s)
         return cls(s)
+
+    @classmethod
+    def from_segments(cls, s, separator=None):
+        return s.split(separator) if separator else s.split()
 
     def to_text(self):
         return ''.join(self)
@@ -160,14 +169,25 @@ class Word(TypedSequence):
     item_separator = ' + '
 
     @classmethod
-    def from_string(cls, s: str, **kw):
+    def from_string(cls, s: str, separator=None, **kw):
+        separator = separator or cls.item_separator
         kw['type'] = Morpheme
         # We assume s is a list of morphemes separated by +:
         return cls(iterable=[
-            Morpheme.from_string(m.strip()) for m in s.split(cls.item_separator.strip())], **kw)
+            Morpheme.from_string(m.strip()) for m in s.split(separator.strip())], **kw)
+
+    @classmethod
+    def from_segments(cls, s, separator=None, **kw):
+        separator = separator or cls.item_separator
+        pattern = r"\s+" + re.escape(separator.strip()) + r"\s+"
+        return cls(iterable=[
+            Morpheme.from_segments(m) for m in re.split(pattern, s)], **kw)
 
     def to_text(self):
         return ''.join(m.to_text() for m in self)
+
+    def reversed_segments(self):
+        return Word([m[::-1] for m in self[::-1]])
 
 
 class Phrase(TypedSequence):
@@ -175,11 +195,12 @@ class Phrase(TypedSequence):
     item_separator = ' _ '
 
     @classmethod
-    def from_string(cls, s: str, **kw):  # pragma: no cover
+    def from_string(cls, s: str, separator=None, **kw):  # pragma: no cover
+        separator = separator or cls.item_separator
         kw['type'] = Word
         # We assume s is a list of morphemes separated by +:
         return cls(iterable=[
-            Word.from_string(m.strip()) for m in s.split(cls.item_separator.strip())], **kw)
+            Word.from_string(m.strip()) for m in s.split(separator.strip())], **kw)
 
     @classmethod
     def from_text(cls, text):
